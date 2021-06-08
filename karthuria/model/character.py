@@ -1,4 +1,5 @@
 from karthuria.model.school import School
+from karthuria.model.color import Color
 
 PORTRAIT_URL = 'https://api.karen.makoo.eu/api/assets/jp/res/ui/images/archive/archive_chara/select' \
                '/chara_portrait_{0}.png '
@@ -15,6 +16,7 @@ class Character:
         self.birthday = '{0}/{1}'.format(birth_day, birth_month)
         self.school = School(school_id)
         self.portrait = PORTRAIT_URL.format(self.id)
+        self.color = Color(name)
         if detailed_info:
             self.description = detailed_info['introduction']['en']
             self.seiyuu = detailed_info['cv']['en']
