@@ -31,7 +31,7 @@ class KarthuriaClient:
             for character in characters_json:
                 basic_info = characters_json[character]['basicInfo']
                 if basic_info['birth_day'] != 0:
-                    list_of_characters.append(self._convert_to_character(basic_info))
+                    list_of_characters.append(_convert_to_character(basic_info))
 
         return list_of_characters if response.ok else response.raise_for_status()
 
@@ -50,21 +50,22 @@ class KarthuriaClient:
             basic_info = character_json['basicInfo']
             info = character_json['info']
 
-        return self._convert_to_character(basic_info, info) if response.ok else response.raise_for_status()
+        return _convert_to_character(basic_info, info) if response.ok else response.raise_for_status()
 
-    def _convert_to_character(self, basic_info: dict, detailed_info: dict = None) -> Character:
-        """
-        Transform a dictionary with the 'basicInfo' and 'info' information returned by Karthuria API
 
-        :param basic_info: Information retrieved from the 'basicInfo' response
-        :param detailed_info: Information retrieved from the 'info' response of detailed character information
-        :return: A new instance of the Character model with the given information
-        """
-        name = basic_info['name_ruby']['ja'] if 'name_ruby' in basic_info else detailed_info['name_ruby']['ja']
-        character = Character(basic_info['charaID'],
-                              name,
-                              basic_info['birth_day'],
-                              basic_info['birth_month'],
-                              basic_info['school_id'],
-                              detailed_info=detailed_info)
-        return character
+def _convert_to_character(basic_info: dict, detailed_info: dict = None) -> Character:
+    """
+    Transform a dictionary with the 'basicInfo' and 'info' information returned by Karthuria API
+
+    :param basic_info: Information retrieved from the 'basicInfo' response
+    :param detailed_info: Information retrieved from the 'info' response of detailed character information
+    :return: A new instance of the Character model with the given information
+    """
+    name = basic_info['name_ruby']['ja'] if 'name_ruby' in basic_info else detailed_info['name_ruby']['ja']
+    character = Character(basic_info['charaID'],
+                          name,
+                          basic_info['birth_day'],
+                          basic_info['birth_month'],
+                          basic_info['school_id'],
+                          detailed_info=detailed_info)
+    return character
