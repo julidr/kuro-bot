@@ -2,6 +2,11 @@ from enum import Enum
 
 
 class School(Enum):
+    """
+    Enum with all the available schools in Shoujo Kageki Revue Starlight.
+    The id and description can be retrieve from it.
+    """
+
     SEISHO = 1, 'Seisho Music Academy 99th Class'
     RINMEIKAN = 2, 'Rinmeikan Girls School'
     FRONTIER = 3, 'Frontier School of Arts'
