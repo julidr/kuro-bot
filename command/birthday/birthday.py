@@ -31,7 +31,8 @@ class BirthdayCommand(commands.Cog):
             title = 'Birthday of {0}'.format(character.name)
             message = '{0} {1}'.format(_special_message_birthday(character.name),
                                        convert_date_to_str(character.birthday))
-            embed = discord.Embed(title=title, description=message, color=discord.Color.from_rgb(254, 153, 82))
+            rgb = character.color.rgb
+            embed = discord.Embed(title=title, description=message, color=_get_discord_color(rgb))
             embed.set_thumbnail(url=character.portrait)
         else:
             message = "Je suis désolé, I don't know who '{0}' is".format(name)
@@ -53,6 +54,16 @@ def _special_message_birthday(name: str) -> str:
     if 'maya' in name.lower():
         message = 'Jum! That annoying woman birthday is'
     return message
+
+
+def _get_discord_color(color: tuple) -> discord.Color:
+    """
+    Given a tuple of rgb colors from each character, return the respective Discord color for it.
+
+    :param color: A tuple with the r, g, b values
+    :return: A discord Color value based on the given values
+    """
+    return discord.Color.from_rgb(color[0], color[1], color[2])
 
 
 def setup(my_bot: commands.Bot) -> None:
