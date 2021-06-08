@@ -15,10 +15,10 @@ class BirthdayCommand(commands.Cog):
     @commands.command(pass_context=True)
     async def birthday(self, ctx: Context, name: str = None) -> None:
         """
-        Show the birthday information for one character
+        Show the birthday information for one character based on the given name
 
         :param ctx: Discord context
-        :param name: name of the character that you want to find its birthday
+        :param name: Character name to search and show its birthday information
         :return: None
         """
         if name is None:
@@ -34,11 +34,19 @@ class BirthdayCommand(commands.Cog):
             embed = discord.Embed(title=title, description=message, color=discord.Color.from_rgb(254, 153, 82))
             embed.set_thumbnail(url=character.portrait)
         else:
-            message = "I don't know who {0} is".format(name)
+            message = "Je suis désolé, I don't know who '{0}' is".format(name)
         await ctx.send(message, embed=embed)
 
 
 def _special_message_birthday(name: str) -> str:
+    """
+    Retrieve an special birthday message based on which character was queried.
+
+    At the moment only claudine and maya have special messages.
+
+    :param name: The name of the character that was queried
+    :return: An special message for the bot to return with the birthday info
+    """
     message = 'Her birthday is'
     if 'claudine' in name.lower():
         message = 'My birthday is'
@@ -47,5 +55,10 @@ def _special_message_birthday(name: str) -> str:
     return message
 
 
-def setup(my_bot: commands.Bot):
+def setup(my_bot: commands.Bot) -> None:
+    """
+    Bot setup necessary to recognize its COG
+    :param my_bot: the bot where the commands need to be register
+    :return: None
+    """
     my_bot.add_cog(BirthdayCommand(my_bot))
