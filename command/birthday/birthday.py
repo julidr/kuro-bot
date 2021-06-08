@@ -3,7 +3,7 @@ from discord.ext import commands
 from discord.ext.commands import bot, Context
 
 from command.birthday.repository.birthday_repository import BirthdayRepository
-from utils.date_utils import convert_date_to_day_and_month
+from utils.date_utils import convert_date_to_str
 
 
 class BirthdayCommand(commands.Cog):
@@ -30,7 +30,7 @@ class BirthdayCommand(commands.Cog):
         if character:
             title = 'Birthday of {0}'.format(character.name)
             message = '{0} {1}'.format(_special_message_birthday(character.name),
-                                       convert_date_to_day_and_month(character.birthday))
+                                       convert_date_to_str(character.birthday))
             embed = discord.Embed(title=title, description=message, color=discord.Color.from_rgb(254, 153, 82))
             embed.set_thumbnail(url=character.portrait)
         else:

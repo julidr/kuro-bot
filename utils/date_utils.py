@@ -1,11 +1,25 @@
 from datetime import datetime
 
 
-def convert_str_to_date(date: str):
-    return datetime.strptime(date, '%d/%m')
+def convert_str_to_date(date: str, date_format: str = '%d/%m') -> datetime:
+    """
+    Receive a date String and convert it into its respective datetime
+
+    :param date: String to convert
+    :param date_format: The format to be able to recognize the date String and transform it to datetime
+    :return: A new datetime with the given information
+    """
+    return datetime.strptime(date, date_format)
 
 
-def convert_date_to_day_and_month(date):
+def convert_date_to_str(date, date_format: str = '%B %d') -> str:
+    """
+    Converts a date either str or datetime into an specific String format
+
+    :param date: The date to transform into String, can be a str or a datetime
+    :param date_format: The string format to transform the given date
+    :return: A string with the respective date information and format
+    """
     if type(date) == str:
-        date = convert_str_to_date(date).date()
-    return datetime.strftime(date, '%B %d')
+        date = convert_str_to_date(date)
+    return datetime.strftime(date, date_format)
