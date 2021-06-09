@@ -1,9 +1,9 @@
 import discord
 from discord.ext import commands
-from discord.ext.commands import bot, Context
+from discord.ext.commands import Context
 
-from command.birthday.repository.birthday_repository import BirthdayRepository
-from utils.date_utils import convert_date_to_str
+from src.command.birthday.repository.birthday_repository import BirthdayRepository
+from src.utils.date_utils import convert_date_to_str
 
 
 class BirthdayCommand(commands.Cog):

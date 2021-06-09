@@ -1,5 +1,5 @@
-from karthuria.model.school import School
-from karthuria.model.color import Color
+from src.karthuria.model.school import School
+from src.karthuria.model.color import Color
 
 PORTRAIT_URL = 'https://api.karen.makoo.eu/api/assets/jp/res/ui/images/archive/archive_chara/select' \
                '/chara_portrait_{0}.png '

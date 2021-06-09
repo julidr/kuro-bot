@@ -1,10 +1,10 @@
 import logging
 
-from karthuria.client import KarthuriaClient
+from src.karthuria.client import KarthuriaClient
 from requests.exceptions import HTTPError
 
-from karthuria.model.character import Character
-from utils.settings_utils import config
+from src.karthuria.model.character import Character
+from src.utils.settings_utils import config
 
 LOG_ID = "BirthdayRepository"
 logging.basicConfig(level=logging.INFO)
@@ -37,7 +37,6 @@ class BirthdayRepository:
         result = [character for character in self.characters if name.lower() in character.name.lower()]
         if len(result) > 0:
             return result[0]
-        return None
 
     def _load_characters(self) -> list:
         """

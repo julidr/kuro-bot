@@ -3,7 +3,7 @@ import logging
 import traceback
 
 from discord.ext import commands
-from utils.settings_utils import config
+from src.utils.settings_utils import config
 
 LOG_ID = 'KuroBotInitializer'
 logging.basicConfig(level=logging.INFO)
