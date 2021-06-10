@@ -1,4 +1,5 @@
 import requests
+
 from src.karthuria.model.character import Character
 
 
