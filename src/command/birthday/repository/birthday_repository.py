@@ -4,7 +4,7 @@ from src.karthuria.client import KarthuriaClient
 from requests.exceptions import HTTPError
 
 from src.karthuria.model.character import Character
-from src.utils.settings_utils import config
+from src.utils.settings_utils import load_settings
 
 LOG_ID = "BirthdayRepository"
 logging.basicConfig(level=logging.INFO)
@@ -16,7 +16,8 @@ class BirthdayRepository:
     """
 
     def __init__(self):
-        self.client = KarthuriaClient(config.get('karthuria_api'))
+        self.config = load_settings()
+        self.client = KarthuriaClient(self.config.get('karthuria_api'))
         self.characters = self._load_characters()
 
     def get_characters(self) -> list:

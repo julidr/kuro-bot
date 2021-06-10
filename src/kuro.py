@@ -3,10 +3,12 @@ import logging
 import traceback
 
 from discord.ext import commands
-from src.utils.settings_utils import config
+from src.utils.settings_utils import load_settings
 
 LOG_ID = 'KuroBotInitializer'
 logging.basicConfig(level=logging.INFO)
+
+config = load_settings()
 
 description = 'Your favorite french girl made a bot, that delivers basic information of Starlight franchise'
 prefixes = config.get('prefixes')
