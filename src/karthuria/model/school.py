@@ -22,7 +22,7 @@ class School(Enum):
         self._description_ = description
 
     def __str__(self):
-        return self.value
+        return str(self.value)
 
     @property
     def description(self):
