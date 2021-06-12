@@ -2,7 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 
-from src.command.birthday.repository.birthday_repository import BirthdayRepository
+from karthuria.repository.character_repository import CharacterRepository
 from src.utils.date_utils import convert_date_to_str
 
 
@@ -10,7 +10,7 @@ class BirthdayCommand(commands.Cog):
 
     def __init__(self, my_bot=commands.Bot):
         self.bot = my_bot
-        self.birthday_repo = BirthdayRepository()
+        self.character_repo = CharacterRepository()
 
     @commands.command(pass_context=True)
     async def birthday(self, ctx: Context, name: str = None) -> None:
@@ -26,7 +26,7 @@ class BirthdayCommand(commands.Cog):
             return
 
         embed = None
-        character = self.birthday_repo.get_character_by_name(name)
+        character = self.character_repo.get_character_by_name(name)
         if character:
             title = 'Birthday of {0}'.format(character.name)
             message = '{0} {1}'.format(_special_message_birthday(character.name),
