@@ -1,6 +1,6 @@
 import requests
 
-from src.karthuria.model.character import Character
+from karthuria.model.character import Character
 
 
 class KarthuriaClient:

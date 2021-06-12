@@ -4,9 +4,9 @@ import pytest
 import requests
 from requests import HTTPError
 
-from src.karthuria.model.color import Color
-from src.karthuria.client import KarthuriaClient
-from src.karthuria.model.school import School
+from karthuria.model.color import Color
+from karthuria.client import KarthuriaClient
+from karthuria.model.school import School
 
 client = KarthuriaClient('test_url')
 

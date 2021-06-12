@@ -3,10 +3,13 @@ from discord.ext import commands
 from discord.ext.commands import Context
 
 from karthuria.repository.character_repository import CharacterRepository
-from src.utils.date_utils import convert_date_to_str
+from utils.date_utils import convert_date_to_str
 
 
 class BirthdayCommand(commands.Cog):
+    """
+    All Kuro bot discord commands that are related to birthdays. Either to get birthday information or to notify them
+    """
 
     def __init__(self, my_bot=commands.Bot):
         self.bot = my_bot

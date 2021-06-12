@@ -2,9 +2,9 @@ import logging
 
 from requests.exceptions import HTTPError
 
-from src.karthuria.client import KarthuriaClient
-from src.karthuria.model.character import Character
-from src.utils.settings_utils import load_settings
+from karthuria.client import KarthuriaClient
+from karthuria.model.character import Character
+from utils.settings_utils import load_settings
 
 LOG_ID = "CharacterRepository"
 logging.basicConfig(level=logging.INFO)

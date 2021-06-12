@@ -4,7 +4,7 @@ import traceback
 
 from discord.ext import commands
 
-from src.utils.settings_utils import load_settings
+from utils.settings_utils import load_settings
 
 LOG_ID = 'KuroBotInitializer'
 logging.basicConfig(level=logging.INFO)

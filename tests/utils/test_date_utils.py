@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from src.utils.date_utils import convert_str_to_date, convert_date_to_str
+from utils.date_utils import convert_str_to_date, convert_date_to_str
 
 
 class TestConvertStrToDate:

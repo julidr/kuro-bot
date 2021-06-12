@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from src.utils.settings_utils import load_settings
+from utils.settings_utils import load_settings
 
 
 class TestLoadSettings:
