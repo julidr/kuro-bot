@@ -3,6 +3,19 @@ from unittest.mock import Mock
 import pytest
 from requests import Response, HTTPError
 
+from karthuria.model.character import Character
+
+
+@pytest.fixture
+def character():
+    detailed_info = {
+        'introduction': {'en': 'Beautiful'},
+        'cv': {'en': 'Aina Aiba'},
+        'likes': {'en': 'Film/theater, training'},
+        'dislikes': {'en': 'Scary stories (esp. Japanese horror films)'},
+    }
+    return Character(104, 'Claudine Saijo', 1, 8, 1, detailed_info)
+
 
 @pytest.fixture(scope='module')
 def ok_characters_response():
