@@ -8,7 +8,7 @@ class TestLoadSettings:
 
     def test_when_load_is_successful(self):
         # Arrange
-        settings_json = os.path.join(os.path.dirname(__file__), '../test-settings.json')
+        settings_json = os.path.join(os.path.dirname(__file__), '../settings.json')
         expected_key = 'key'
         expected_value = 'value'
 

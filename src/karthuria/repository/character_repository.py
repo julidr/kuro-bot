@@ -4,29 +4,18 @@ from requests.exceptions import HTTPError
 
 from karthuria.client import KarthuriaClient
 from karthuria.model.character import Character
-from utils.settings_utils import load_settings
 
 LOG_ID = "CharacterRepository"
 logging.basicConfig(level=logging.INFO)
 
 
-class Singleton(type):
-    _instances = {}
-
-    def __call__(cls, *args, **kwargs):
-        if cls not in cls._instances:
-            cls._instances[cls] = super(Singleton, cls).__call__(*args, **kwargs)
-        return cls._instances[cls]
-
-
-class CharacterRepository(metaclass=Singleton):
+class CharacterRepository:
     """
     Repository with the information of characters
     """
 
-    def __init__(self):
-        self.config = load_settings()
-        self.client = KarthuriaClient(self.config.get('karthuria_api'))
+    def __init__(self, client: KarthuriaClient):
+        self.client = client
         self.characters = self._load_characters()
 
     def get_characters(self) -> list:

@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from discord.ext.commands import Context
 
+from command.initializer import Initializer
 from karthuria.repository.character_repository import CharacterRepository
 from utils.date_utils import convert_date_to_str
 
@@ -11,9 +12,9 @@ class BirthdayCommand(commands.Cog):
     All Kuro bot discord commands that are related to birthdays. Either to get birthday information or to notify them
     """
 
-    def __init__(self, my_bot=commands.Bot):
+    def __init__(self, character_repository: CharacterRepository, my_bot=commands.Bot):
         self.bot = my_bot
-        self.character_repo = CharacterRepository()
+        self.character_repo = character_repository
 
     @commands.command(pass_context=True)
     async def birthday(self, ctx: Context, name: str = None) -> None:
@@ -75,4 +76,5 @@ def setup(my_bot: commands.Bot) -> None:
     :param my_bot: the bot where the commands need to be register
     :return: None
     """
-    my_bot.add_cog(BirthdayCommand(my_bot))
+    initializer = Initializer()
+    my_bot.add_cog(BirthdayCommand(initializer.get_character_repository(), my_bot))
