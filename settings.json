@@ -1,0 +1,8 @@
+{
+  "token": "",
+  "prefixes":  ["!", "$"],
+  "commands": [
+    "command.birthday.birthday"
+  ],
+  "karthuria_api": "https://karth.top/api"
+}
