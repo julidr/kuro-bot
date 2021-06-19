@@ -37,6 +37,16 @@ class CharacterRepository:
         if len(result) > 0:
             return result[0]
 
+    def get_character_birthday(self, date: str) -> Character:
+        """
+        For a given date looks for a character with that date birthday and return it.
+        :param date: A date in format %d/%m if this format is not used then it will never found a character.
+        :return: The character that has a birthday in the given date
+        """
+        for character in self.characters:
+            if character.birthday == date:
+                return self.client.get_character(character.id)
+
     def _load_characters(self) -> list:
         """
         Calls Karthuria API to load characters basic information
