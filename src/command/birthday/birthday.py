@@ -1,10 +1,18 @@
+import logging
+from datetime import datetime
+
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
 from discord.ext.commands import Context
 
 from command.initializer import Initializer
 from karthuria.repository.character_repository import CharacterRepository
 from utils.date_utils import convert_date_to_str
+
+LOG_ID = "BirthdayCommand"
+logging.basicConfig(level=logging.INFO)
+
+SCHOOL_ICON_URL = "https://api.karen.makoo.eu/api/assets/jp/res/ui/images/chat/icon_school_{0}.png"
 
 
 class BirthdayCommand(commands.Cog):
@@ -15,6 +23,7 @@ class BirthdayCommand(commands.Cog):
     def __init__(self, character_repository: CharacterRepository, my_bot=commands.Bot):
         self.bot = my_bot
         self.character_repo = character_repository
+        self.birthday_reminder.start()
 
     @commands.command(pass_context=True)
     async def birthday(self, ctx: Context, name: str = None) -> None:
@@ -25,6 +34,7 @@ class BirthdayCommand(commands.Cog):
         :param name: Character name to search and show its birthday information
         :return: None
         """
+        logging.debug('[{0}] - Birthday called with value [{1}]'.format(LOG_ID, name))
         if name is None:
             await ctx.send('Méchante va! - Please specify the name of the girl.')
             return
@@ -41,6 +51,45 @@ class BirthdayCommand(commands.Cog):
         else:
             message = "Je suis désolé, I don't know who '{0}' is".format(name)
         await ctx.send(message, embed=embed)
+
+    @tasks.loop(hours=24)
+    async def birthday_reminder(self) -> None:
+        """
+        Background task that is executed one time each 24 hours to review if it is the birthday of
+        any stage girl. If it is then sends a message to the respective announcement channel.
+
+        :return: None
+        """
+        logging.info('[{0}] - Reviewing today birthdays'.format(LOG_ID))
+        today = convert_date_to_str(datetime.today().date(), '%d/%m')
+        birthday_girl = self.character_repo.get_character_birthday(today)
+
+        if birthday_girl is not None:
+            logging.info('[{0}] - Birthday of {1} found'.format(LOG_ID, birthday_girl.name))
+
+            title = 'Bon anniversaire {0}!!'.format(birthday_girl.name)
+            pronoun = 'my' if 'Claudine' in birthday_girl.name else birthday_girl.name
+            message = "@everyone Today is {0} birthday!! Let's celebrate it.".format(pronoun)
+            rgb = birthday_girl.color.rgb
+
+            embed = discord.Embed(title=title, description=message, color=_get_discord_color(rgb))
+            embed.set_thumbnail(url=birthday_girl.portrait)
+            embed.set_image(url=SCHOOL_ICON_URL.format(birthday_girl.school))
+            embed.add_field(name='Description', value=birthday_girl.description, inline=False)
+            embed.add_field(name='Birthday', value=convert_date_to_str(birthday_girl.birthday), inline=False)
+            embed.add_field(name='Voice Actor', value=birthday_girl.seiyuu, inline=False)
+            embed.add_field(name='Likes', value=birthday_girl.likes, inline=True)
+            embed.add_field(name='Dislikes', value=birthday_girl.dislikes, inline=True)
+            embed.add_field(name='School', value=birthday_girl.school.description, inline=False)
+
+            channel = self.bot.get_channel(1)
+            await channel.send(embed=embed)
+
+    @birthday_reminder.before_loop
+    async def before_birthday_reminder(self):
+        logging.info('[{0}] - Waiting to start birthdays reminders...'.format(LOG_ID))
+        await self.bot.wait_until_ready()
+        logging.info('[{0}] - Birthday reminders ready!'.format(LOG_ID))
 
 
 def _special_message_birthday(name: str) -> str:
