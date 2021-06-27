@@ -1,10 +1,11 @@
+import datetime
 import logging
-from datetime import datetime
 
 import discord
 from discord.ext import commands, tasks
 from discord.ext.commands import Context
 
+from command.configuration.repository.server_repository import ServerRepository
 from command.initializer import Initializer
 from karthuria.repository.character_repository import CharacterRepository
 from utils.date_utils import convert_date_to_str
@@ -20,9 +21,11 @@ class BirthdayCommand(commands.Cog):
     All Kuro bot discord commands that are related to birthdays. Either to get birthday information or to notify them
     """
 
-    def __init__(self, character_repository: CharacterRepository, my_bot=commands.Bot):
+    def __init__(self, character_repository: CharacterRepository, server_repository: ServerRepository,
+                 my_bot=commands.Bot):
         self.bot = my_bot
-        self.character_repo = character_repository
+        self.character_repository = character_repository
+        self.server_repository = server_repository
         self.birthday_reminder.start()
 
     @commands.command(pass_context=True)
@@ -40,7 +43,7 @@ class BirthdayCommand(commands.Cog):
             return
 
         embed = None
-        character = self.character_repo.get_character_by_name(name)
+        character = self.character_repository.get_character_by_name(name)
         if character:
             title = 'Birthday of {0}'.format(character.name)
             message = '{0} {1}'.format(_special_message_birthday(character.name),
@@ -61,8 +64,9 @@ class BirthdayCommand(commands.Cog):
         :return: None
         """
         logging.info('[{0}] - Reviewing today birthdays'.format(LOG_ID))
+        self.server_repository.load_servers()
         today = convert_date_to_str(datetime.today().date(), '%d/%m')
-        birthday_girl = self.character_repo.get_character_birthday(today)
+        birthday_girl = self.character_repository.get_character_birthday(today)
 
         if birthday_girl is not None:
             logging.info('[{0}] - Birthday of {1} found'.format(LOG_ID, birthday_girl.name))
@@ -82,8 +86,13 @@ class BirthdayCommand(commands.Cog):
             embed.add_field(name='Dislikes', value=birthday_girl.dislikes, inline=True)
             embed.add_field(name='School', value=birthday_girl.school.description, inline=False)
 
-            channel = self.bot.get_channel(1)
-            await channel.send(embed=embed)
+            for guild in self.bot.guilds:
+                server = self.server_repository.find_server_by_id(guild.id)
+                if server is None:
+                    logging.warning('[{0}] - Missing configuration for guild [{1}]'.format(LOG_ID, guild.name))
+                else:
+                    channel = self.bot.get_channel(server.birthday_channel.channel_id)
+                    await channel.send(embed=embed)
 
     @birthday_reminder.before_loop
     async def before_birthday_reminder(self):
@@ -126,4 +135,6 @@ def setup(my_bot: commands.Bot) -> None:
     :return: None
     """
     initializer = Initializer()
-    my_bot.add_cog(BirthdayCommand(initializer.get_character_repository(), my_bot))
+    my_bot.add_cog(BirthdayCommand(initializer.get_character_repository(),
+                                   initializer.get_servers_repository(),
+                                   my_bot))
