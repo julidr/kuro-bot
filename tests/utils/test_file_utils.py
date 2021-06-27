@@ -3,7 +3,7 @@ from json import JSONDecodeError
 
 import pytest
 
-from utils.file_utils import load_json_file
+from utils.file_utils import load_json_file, write_json_file
 
 
 class TestLoadJsonFile:
@@ -41,6 +41,35 @@ class TestLoadJsonFile:
         # Act
         with pytest.raises(JSONDecodeError) as exception:
             load_json_file(no_json_file)
+
+        # Assert
+        assert expected_error_message in str(exception.value)
+
+
+class TestWriteJsonFile:
+
+    def test_when_write_is_successful(self):
+        # Arrange
+        file_json = os.path.join(os.path.dirname(__file__), '../write.json')
+        expected_data = {'key': 'value'}
+
+        # Act
+        write_json_file(file_json, expected_data)
+
+        # Assert
+        assert os.path.isfile(file_json) is True
+
+        # Teardown
+        os.remove(file_json)
+
+    def test_when_data_is_not_json_serializable(self, character):
+        # Arrange
+        file_json = os.path.join(os.path.dirname(__file__), '../write2.json')
+        expected_error_message = 'Object of type Character is not JSON serializable'
+
+        # Act
+        with pytest.raises(TypeError) as exception:
+            write_json_file(file_json, character)
 
         # Assert
         assert expected_error_message in str(exception.value)
