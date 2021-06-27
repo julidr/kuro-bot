@@ -1,10 +1,12 @@
 import os
+from json import JSONDecodeError
+
 import pytest
 
 from utils.file_utils import load_json_file
 
 
-class TestLoadFiles:
+class TestLoadJsonFile:
 
     def test_when_load_is_successful(self):
         # Arrange
@@ -27,6 +29,18 @@ class TestLoadFiles:
         # Act
         with pytest.raises(FileNotFoundError) as exception:
             load_json_file(bad_settings_json)
+
+        # Assert
+        assert expected_error_message in str(exception.value)
+
+    def test_when_files_is_not_json(self):
+        # Arrange
+        no_json_file = os.path.join(os.path.dirname(__file__), '../test.txt')
+        expected_error_message = 'Expecting value: line 1 column 1'
+
+        # Act
+        with pytest.raises(JSONDecodeError) as exception:
+            load_json_file(no_json_file)
 
         # Assert
         assert expected_error_message in str(exception.value)
