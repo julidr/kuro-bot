@@ -57,6 +57,6 @@ class CharacterRepository:
         try:
             characters = self.client.get_characters()
             logging.info('[{0}] - Characters information loaded successfully'.format(LOG_ID))
-        except HTTPError:
-            logging.error("[{0}] - Couldn't load characters information".format(LOG_ID))
+        except HTTPError as error:
+            logging.error("[{0}] - Couldn't load characters information {1}".format(LOG_ID, error))
         return characters
