@@ -3,7 +3,7 @@ from json import JSONDecodeError
 
 import pytest
 
-from utils.file_utils import load_json_file, write_json_file
+from utils.file_utils import load_json_file, write_json_file, is_file
 
 
 class TestLoadJsonFile:
@@ -73,3 +73,42 @@ class TestWriteJsonFile:
 
         # Assert
         assert expected_error_message in str(exception.value)
+
+        # Teardown
+        os.remove(file_json)
+
+
+class TestIsFile:
+
+    def test_when_is_a_file(self):
+        # Arrange
+        file_path = os.path.join(os.path.dirname(__file__), '../settings.json')
+        expected_result = True
+
+        # Act
+        result = is_file(file_path)
+
+        # Assert
+        assert expected_result == result
+
+    def test_when_is_a_dir(self):
+        # Arrange
+        file_path = os.path.join(os.path.dirname(__file__))
+        expected_result = False
+
+        # Act
+        result = is_file(file_path)
+
+        # Assert
+        assert expected_result == result
+
+    def test_when_file_doesnt_exist(self):
+        # Arrange
+        file_path = 'test.json'
+        expected_result = False
+
+        # Act
+        result = is_file(file_path)
+
+        # Assert
+        assert expected_result == result
