@@ -1,6 +1,8 @@
+import os
+
 from karthuria.client import KarthuriaClient
 from karthuria.repository.character_repository import CharacterRepository
-from utils.settings_utils import load_settings
+from utils.file_utils import load_json_file
 
 
 class Singleton(type):
@@ -23,7 +25,7 @@ class Initializer(metaclass=Singleton):
     """
 
     def __init__(self):
-        self.settings = load_settings()
+        self.settings = load_json_file(os.getenv('SETTINGS_PATH', 'settings.json'))
         self.karthuria_client = KarthuriaClient(self.settings.get('karthuria_api_url'))
         self.character_repository = CharacterRepository(self.karthuria_client)
 

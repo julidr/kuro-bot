@@ -1,10 +1,10 @@
 import os
 import pytest
 
-from utils.settings_utils import load_settings
+from utils.file_utils import load_json_file
 
 
-class TestLoadSettings:
+class TestLoadFiles:
 
     def test_when_load_is_successful(self):
         # Arrange
@@ -13,7 +13,7 @@ class TestLoadSettings:
         expected_value = 'value'
 
         # Act
-        result = load_settings(settings_json)
+        result = load_json_file(settings_json)
 
         # Assert
         assert result.get(expected_key) is not None
@@ -26,7 +26,7 @@ class TestLoadSettings:
 
         # Act
         with pytest.raises(FileNotFoundError) as exception:
-            load_settings(bad_settings_json)
+            load_json_file(bad_settings_json)
 
         # Assert
         assert expected_error_message in str(exception.value)
