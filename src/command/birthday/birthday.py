@@ -1,5 +1,5 @@
-import datetime
 import logging
+from datetime import datetime
 
 import discord
 from discord.ext import commands, tasks
@@ -89,10 +89,14 @@ class BirthdayCommand(commands.Cog):
             for guild in self.bot.guilds:
                 server = self.server_repository.find_server_by_id(guild.id)
                 if server is None:
-                    logging.warning('[{0}] - Missing configuration for guild [{1}]'.format(LOG_ID, guild.name))
+                    logging.warning('[{0}] - Missing configuration for server [{1}]'.format(LOG_ID, guild.name))
                 else:
-                    channel = self.bot.get_channel(server.birthday_channel.channel_id)
-                    await channel.send(embed=embed)
+                    if server.birthday_channel is not None:
+                        channel = self.bot.get_channel(server.birthday_channel.channel_id)
+                        await channel.send(embed=embed)
+                    else:
+                        logging.warning('[{0}] - Missing configuration for birthday channel '
+                                        'in server [{1}]'.format(LOG_ID, guild.name))
 
     @birthday_reminder.before_loop
     async def before_birthday_reminder(self):
