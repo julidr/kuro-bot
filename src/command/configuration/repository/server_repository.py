@@ -85,7 +85,7 @@ class ServerRepository:
                 logging.info('[{0}] - Server information loaded successfully'.format(LOG_ID))
             else:
                 logging.error("[{0}] - Couldn't load server information, Not file found".format(LOG_ID))
-        except JSONDecodeError as error:
+        except (JSONDecodeError, TypeError) as error:
             logging.error("[{0}] - Couldn't load server information: {1}".format(LOG_ID, error))
         return servers
 
