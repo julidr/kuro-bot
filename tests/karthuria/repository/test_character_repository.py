@@ -21,7 +21,7 @@ class TestLoadCharacters:
         assert len(response) == 1
         assert response[0].description == 'Beautiful'
 
-    def test_when_characters_load_unsuccessful(self, character):
+    def test_when_characters_load_unsuccessful(self):
         # Arrange
         mock_client = Mock(spec=KarthuriaClient)
         mock_client.get_characters.side_effect = HTTPError('Ups')
@@ -35,7 +35,8 @@ class TestLoadCharacters:
 
 
 class TestGetCharactersByName:
-    def test_get_character_by_name_successful(self, character):
+
+    def test_get_character_by_name_when_somebody_is_found(self, character):
         # Arrange
         mock_client = Mock(spec=KarthuriaClient)
         mock_client.get_characters.return_value = [character]
@@ -56,6 +57,36 @@ class TestGetCharactersByName:
 
         # Act
         response = repository.get_character_by_name('Maya')
+
+        # Assert
+        assert response is None
+
+
+class TestGetCharacterBirthday:
+
+    def test_get_character_birthday_when_is_somebody_birthday(self, character):
+        # Arrange
+        mock_client = Mock(spec=KarthuriaClient)
+        mock_client.get_characters.return_value = [character]
+        mock_client.get_character.return_value = character
+        repository = CharacterRepository(mock_client)
+        expected_name = 'Claudine Saijo'
+
+        # Act
+        response = repository.get_character_birthday('1/8')
+
+        # Assert
+        assert response.name == expected_name
+
+    def test_get_character_birthday_when_is_nobody_birthday(self, character):
+        # Arrange
+        mock_client = Mock(spec=KarthuriaClient)
+        mock_client.get_characters.return_value = [character]
+        mock_client.get_character.return_value = character
+        repository = CharacterRepository(mock_client)
+
+        # Act
+        response = repository.get_character_birthday('1/9')
 
         # Assert
         assert response is None
