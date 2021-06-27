@@ -36,7 +36,7 @@ class TestLoadCharacters:
 
 class TestGetCharactersByName:
 
-    def test_get_character_by_name_when_somebody_is_found(self, character):
+    def test_when_somebody_is_found(self, character):
         # Arrange
         mock_client = Mock(spec=KarthuriaClient)
         mock_client.get_characters.return_value = [character]
@@ -49,7 +49,7 @@ class TestGetCharactersByName:
         # Assert
         assert response.name == expected_name
 
-    def test_get_character_by_name_not_found(self, character):
+    def test_when_nobody_is_found(self, character):
         # Arrange
         mock_client = Mock(spec=KarthuriaClient)
         mock_client.get_characters.return_value = [character]
@@ -64,7 +64,7 @@ class TestGetCharactersByName:
 
 class TestGetCharacterBirthday:
 
-    def test_get_character_birthday_when_is_somebody_birthday(self, character):
+    def test_when_is_somebody_birthday(self, character):
         # Arrange
         mock_client = Mock(spec=KarthuriaClient)
         mock_client.get_characters.return_value = [character]
@@ -78,7 +78,7 @@ class TestGetCharacterBirthday:
         # Assert
         assert response.name == expected_name
 
-    def test_get_character_birthday_when_is_nobody_birthday(self, character):
+    def test_when_is_nobody_birthday(self, character):
         # Arrange
         mock_client = Mock(spec=KarthuriaClient)
         mock_client.get_characters.return_value = [character]
