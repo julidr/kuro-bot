@@ -21,13 +21,17 @@ class ConfigurationCommand(commands.Cog):
         self.server_repository = server_repository
 
     @commands.command(pass_context=True)
-    async def birthday_announcements(self, ctx: Context, channel_name: str) -> None:
+    async def birthday_announcements(self, ctx: Context, channel_name: str = None) -> None:
         """
         Allows the configuration of birthday announcements channel of preference for a Discord Server
         :param ctx: Discord context
         :param channel_name: Name of the channel where notification will be send
         :return: None
         """
+        if channel_name is None:
+            await ctx.send('Hmm...Please specify the channel name.'.format(channel_name))
+            return
+
         channels = ctx.guild.channels
         logging.info('[{0}] - Looking for channel [{1}] in server [{2}]'.format(LOG_ID, channel_name, ctx.guild.name))
         for channel in channels:
