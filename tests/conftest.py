@@ -3,6 +3,7 @@ from unittest.mock import Mock
 import pytest
 from requests import Response, HTTPError
 
+from command.configuration.model.server import Channel, Server
 from karthuria.model.character import Character
 
 
@@ -57,6 +58,43 @@ def ok_character_response():
     response.json.return_value = get_character_sample_request()
 
     return response
+
+
+@pytest.fixture()
+def complete_server_info():
+    return [{
+        "server_id": 1,
+        "name": "Test Server",
+        "birthday_channel": {
+            "channel_id": 1,
+            "name": "birthday-channel"
+        },
+        "event_channel": {
+            "channel_id": 1,
+            "name": "birthday-channel"
+        }
+    }]
+
+
+@pytest.fixture()
+def one_channels_server_info():
+    return [{
+        "server_id": 1,
+        "name": "Test Server",
+        "birthday_channel": {
+            "channel_id": 1,
+            "name": "birthday-channel"
+        },
+        "event_channel": ""
+    }]
+
+
+@pytest.fixture()
+def server_with_channels():
+    birthday_channel = Channel(1, 'birthday-channel')
+    event_channel = Channel(2, 'event_channel')
+    server = Server(1, 'Test Channel', birthday_channel, event_channel)
+    return server
 
 
 def get_characters_sample_request() -> dict:

@@ -1,6 +1,9 @@
+import os
+
+from command.configuration.repository.server_repository import ServerRepository
 from karthuria.client import KarthuriaClient
 from karthuria.repository.character_repository import CharacterRepository
-from utils.settings_utils import load_settings
+from utils.file_utils import load_json_file
 
 
 class Singleton(type):
@@ -23,9 +26,10 @@ class Initializer(metaclass=Singleton):
     """
 
     def __init__(self):
-        self.settings = load_settings()
+        self.settings = load_json_file(os.getenv('SETTINGS_PATH', 'settings.json'))
         self.karthuria_client = KarthuriaClient(self.settings.get('karthuria_api_url'))
         self.character_repository = CharacterRepository(self.karthuria_client)
+        self.server_repository = ServerRepository(self.settings.get('servers_path'))
 
     def get_karthuria_client(self) -> KarthuriaClient:
         """
@@ -40,3 +44,10 @@ class Initializer(metaclass=Singleton):
         :return: An instance of the Character Repository
         """
         return self.character_repository
+
+    def get_servers_repository(self) -> ServerRepository:
+        """
+        Based on the class initialization return the specific server repository that was configured.
+        :return: An instance of the Server Repository
+        """
+        return self.server_repository

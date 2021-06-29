@@ -32,7 +32,7 @@ class KarthuriaClient:
             for character in characters_json:
                 basic_info = characters_json[character]['basicInfo']
                 if basic_info['birth_day'] != 0:
-                    list_of_characters.append(_convert_to_character(basic_info))
+                    list_of_characters.append(convert_to_character(basic_info))
 
         return list_of_characters if response.ok else response.raise_for_status()
 
@@ -51,10 +51,10 @@ class KarthuriaClient:
             basic_info = character_json['basicInfo']
             info = character_json['info']
 
-        return _convert_to_character(basic_info, info) if response.ok else response.raise_for_status()
+        return convert_to_character(basic_info, info) if response.ok else response.raise_for_status()
 
 
-def _convert_to_character(basic_info: dict, detailed_info: dict = None) -> Character:
+def convert_to_character(basic_info: dict, detailed_info: dict = None) -> Character:
     """
     Transform a dictionary with the 'basicInfo' and 'info' information returned by Karthuria API
 

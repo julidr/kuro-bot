@@ -2,7 +2,9 @@
   "token": "",
   "prefixes":  ["!", "$"],
   "commands": [
-    "command.birthday.birthday"
+    "command.birthday.birthday",
+    "command.configuration.configuration"
   ],
-  "karthuria_api": "https://karth.top/api"
+  "karthuria_api_url": "https://karth.top/api",
+  "servers_path": "servers.json"
 }
