@@ -45,9 +45,9 @@ class ServerRepository:
             server = Server(server_id, server_name)
         add_channel = getattr(server, 'add_{0}'.format(channel_type.value))
         add_channel(channel)
-        self._save_server(server)
+        self.__save_server(server)
 
-    def _save_server(self, new_server: Server) -> None:
+    def __save_server(self, new_server: Server) -> None:
         """
         Saves into a pre configured json file the information of a server.
         If the server already exist then it will update it.

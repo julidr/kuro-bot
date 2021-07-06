@@ -46,10 +46,10 @@ class BirthdayCommand(commands.Cog):
         character = self.character_repository.get_character_by_name(name)
         if character:
             title = 'Birthday of {0}'.format(character.name)
-            message = '{0} {1}'.format(_special_message_birthday(character.name),
+            message = '{0} {1}'.format(special_message_birthday(character.name),
                                        convert_date_to_str(character.birthday))
             rgb = character.color.rgb
-            embed = discord.Embed(title=title, description=message, color=_get_discord_color(rgb))
+            embed = discord.Embed(title=title, description=message, color=get_discord_color(rgb))
             embed.set_thumbnail(url=character.portrait)
         else:
             message = "Je suis désolé, I don't know who '{0}' is".format(name)
@@ -76,7 +76,7 @@ class BirthdayCommand(commands.Cog):
             message = "@everyone Today is {0} birthday!! Let's celebrate it.".format(pronoun)
             rgb = birthday_girl.color.rgb
 
-            embed = discord.Embed(title=title, description=message, color=_get_discord_color(rgb))
+            embed = discord.Embed(title=title, description=message, color=get_discord_color(rgb))
             embed.set_thumbnail(url=birthday_girl.portrait)
             embed.set_image(url=SCHOOL_ICON_URL.format(birthday_girl.school))
             embed.add_field(name='Description', value=birthday_girl.description, inline=False)
@@ -105,7 +105,7 @@ class BirthdayCommand(commands.Cog):
         logging.info('[{0}] - Birthday reminders ready!'.format(LOG_ID))
 
 
-def _special_message_birthday(name: str) -> str:
+def special_message_birthday(name: str) -> str:
     """
     Retrieve an special birthday message based on which character was queried.
 
@@ -122,7 +122,7 @@ def _special_message_birthday(name: str) -> str:
     return message
 
 
-def _get_discord_color(color: tuple) -> discord.Color:
+def get_discord_color(color: tuple) -> discord.Color:
     """
     Given a tuple of rgb colors from each character, return the respective Discord color for it.
 
