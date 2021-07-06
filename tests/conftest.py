@@ -27,7 +27,7 @@ def ok_characters_response():
     """
     response = Mock(spec=Response)
     response.ok = True
-    response.json.return_value = get_characters_sample_request()
+    response.json.return_value = get_characters_sample_response()
 
     return response
 
@@ -55,7 +55,7 @@ def ok_character_response():
     """
     response = Mock(spec=Response)
     response.ok = True
-    response.json.return_value = get_character_sample_request()
+    response.json.return_value = get_character_sample_response()
 
     return response
 
@@ -97,9 +97,9 @@ def server_with_channels():
     return server
 
 
-def get_characters_sample_request() -> dict:
+def get_characters_sample_response() -> dict:
     """
-    Sample request of the call to Karthuria API chara.json
+    Sample response of the call to Karthuria API chara.json
 
     :return: A dict with two samples of response of the API, one a valid character and other one invalid
     """
@@ -135,9 +135,9 @@ def get_characters_sample_request() -> dict:
     }
 
 
-def get_character_sample_request():
+def get_character_sample_response():
     """
-    Sample request of the call to Karthuria API chara/id.json
+    Sample response of the call to Karthuria API chara/id.json
 
     :return: A dict with two samples of response of the API with the found character
     """
