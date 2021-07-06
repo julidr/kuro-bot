@@ -127,7 +127,7 @@ def complete_server_info():
         },
         "event_channel": {
             "channel_id": 1,
-            "name": "birthday-channel"
+            "name": "event-channel"
         }
     }]
 
