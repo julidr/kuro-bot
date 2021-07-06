@@ -3,7 +3,8 @@
   "prefixes":  ["!", "$"],
   "commands": [
     "command.birthday.birthday",
-    "command.configuration.configuration"
+    "command.configuration.configuration",
+    "command.event.event"
   ],
   "karthuria_api_url": "https://karth.top/api",
   "servers_path": "servers.json"
