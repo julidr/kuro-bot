@@ -64,7 +64,7 @@ class BirthdayCommand(commands.Cog):
         :return: None
         """
         logging.info('[{0}] - Reviewing today birthdays'.format(LOG_ID))
-        self.server_repository.load_servers()
+        self.server_repository.reload_servers()
         today = convert_date_to_str(datetime.today().date(), '%d/%m')
         birthday_girl = self.character_repository.get_character_birthday(today)
 
