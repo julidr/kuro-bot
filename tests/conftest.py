@@ -4,7 +4,7 @@ import pytest
 from requests import Response, HTTPError
 
 from command.configuration.model.server import Channel, Server
-from karthuria.model.character import Character
+from karthuria.model.character import Character, Dress
 
 
 @pytest.fixture
@@ -16,6 +16,11 @@ def character():
         'dislikes': {'en': 'Scary stories (esp. Japanese horror films)'},
     }
     return Character(104, 'Claudine Saijo', 1, 8, 1, detailed_info)
+
+
+@pytest.fixture
+def dress():
+    return Dress(1, 'Dress Test', 5)
 
 
 @pytest.fixture(scope='module')
