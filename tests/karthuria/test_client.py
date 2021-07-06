@@ -73,3 +73,117 @@ class TestGetCharacter:
         # Assert
         requests_mock.assert_called()
         assert str(exception.value) == expected_error_message
+
+
+class TestGetDress:
+
+    def test_when_response_is_successful(self, ok_dress_response):
+        # Arrange
+        expected_name = 'Tristan'
+
+        # Act
+        with patch.object(requests, 'get', return_value=ok_dress_response) as requests_mock:
+            response = client.get_dress(1)
+
+        # Assert
+        requests_mock.assert_called()
+        assert response is not None
+        assert response.name == expected_name
+
+    def test_when_response_is_no_successful(self, bad_response):
+        # Arrange
+        expected_error_message = 'Ups'
+
+        # Act
+        with patch.object(requests, 'get', return_value=bad_response) as requests_mock:
+            with pytest.raises(HTTPError) as exception:
+                client.get_dress(1)
+
+        # Assert
+        requests_mock.assert_called()
+        assert str(exception.value) == expected_error_message
+
+
+class TestGetEnemy:
+
+    def test_when_response_is_successful(self, ok_enemy_response):
+        # Arrange
+        expected_name = 'Resentful Andrew'
+        expected_rarity = 1
+
+        # Act
+        with patch.object(requests, 'get', return_value=ok_enemy_response) as requests_mock:
+            response = client.get_enemy(1)
+
+        # Assert
+        requests_mock.assert_called()
+        assert response is not None
+        assert response.name == expected_name
+        assert response.rarity == expected_rarity
+
+    def test_when_response_is_no_successful(self, bad_response):
+        # Arrange
+        expected_error_message = 'Ups'
+
+        # Act
+        with patch.object(requests, 'get', return_value=bad_response) as requests_mock:
+            with pytest.raises(HTTPError) as exception:
+                client.get_enemy(1)
+
+        # Assert
+        requests_mock.assert_called()
+        assert str(exception.value) == expected_error_message
+
+
+class TestGetEvents:
+
+    def test_when_response_is_successful(self, ok_events_response):
+        # Arrange
+        expected_name = 'Hello to Halloween'
+        expected_event_id = '101'
+
+        # Act
+        with patch.object(requests, 'get', return_value=ok_events_response) as requests_mock:
+            response = client.get_events()
+
+        # Assert
+        requests_mock.assert_called()
+        assert response is not None
+        assert len(response) == 2
+        assert response[0].name == expected_name
+        assert response[1].event_id == expected_event_id
+
+    def test_when_response_is_no_successful(self, bad_response):
+        # Arrange
+        expected_error_message = 'Ups'
+
+        # Act
+        with patch.object(requests, 'get', return_value=bad_response) as requests_mock:
+            with pytest.raises(HTTPError) as exception:
+                client.get_events()
+
+        # Assert
+        requests_mock.assert_called()
+        assert str(exception.value) == expected_error_message
+
+
+class TestGetCurrentEvents:
+    def test_when_response_is_successful(self, ok_current_events_response):
+        # Arrange
+        expected_event_id = 118
+        expected_challenge_id = 1080009
+        expected_boss_id = 900620202
+
+        # Act
+        with patch.object(requests, 'get', return_value=ok_current_events_response) as requests_mock:
+            response = client.get_current_events()
+
+        # Assert
+        requests_mock.assert_called()
+        assert response is not None
+        assert len(response['events']) == 1
+        assert response['events'][0].event_id == expected_event_id
+        assert len(response['challenges']) == 2
+        assert response['challenges'][1].event_id == expected_challenge_id
+        assert len(response['bosses']) == 2
+        assert response['bosses'][0].event_id == expected_boss_id
