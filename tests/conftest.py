@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from unittest.mock import Mock
 
 import pytest
@@ -5,6 +6,7 @@ from requests import Response, HTTPError
 
 from command.configuration.model.server import Channel, Server
 from karthuria.model.character import Character, Dress, Enemy
+from karthuria.model.event import Event, Challenge, Boss
 
 
 @pytest.fixture
@@ -26,6 +28,28 @@ def dress():
 @pytest.fixture
 def enemy():
     return Enemy(1, 'Enemy Test', 1, 1)
+
+
+@pytest.fixture
+def event():
+    start_date = datetime.now()
+    end_date = datetime.now() + timedelta(days=1)
+    return Event(1, name='Event Test', end_date=end_date.timestamp(), start_date=start_date.timestamp())
+
+
+@pytest.fixture
+def complete_current_events():
+    end_date = datetime.now() + timedelta(days=1)
+    event = Event(1, end_date=end_date.timestamp())
+    challenge = Challenge(2, end_date=end_date.timestamp())
+    boss = Boss(3, end_date=end_date.timestamp())
+
+    current_events = {
+        'events': [event],
+        'challenges': [challenge],
+        'bosses': [boss]
+    }
+    return current_events
 
 
 @pytest.fixture(scope='module')
