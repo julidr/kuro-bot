@@ -9,6 +9,7 @@ from command.configuration.repository.server_repository import ServerRepository
 from command.initializer import Initializer
 from karthuria.repository.character_repository import CharacterRepository
 from utils.date_utils import convert_date_to_str
+from utils.discord_utils import get_discord_color
 
 LOG_ID = "BirthdayCommand"
 logging.basicConfig(level=logging.INFO)
@@ -120,16 +121,6 @@ def special_message_birthday(name: str) -> str:
     if 'maya' in name.lower():
         message = 'Jum! That annoying woman birthday is'
     return message
-
-
-def get_discord_color(color: tuple) -> discord.Color:
-    """
-    Given a tuple of rgb colors from each character, return the respective Discord color for it.
-
-    :param color: A tuple with the r, g, b values
-    :return: A discord Color value based on the given values
-    """
-    return discord.Color.from_rgb(color[0], color[1], color[2])
 
 
 def setup(my_bot: commands.Bot) -> None:
