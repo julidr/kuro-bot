@@ -26,6 +26,12 @@ This bot works either with `!` or `$` prefixes.
 ```
 !birthday_announcements general
 ```
+- **current_events**: Returns a list with the different current ongoing events in all Re-live servers.
+These events are classified as _events_, _challenges_ and _score attack_ (bosses).
+
+```
+!current_events
+```
 
 ### Tasks ###
 
