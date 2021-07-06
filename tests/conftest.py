@@ -126,6 +126,23 @@ def ok_current_events_response():
     return response
 
 
+@pytest.fixture(scope='module')
+def only_challenge_current_events_response():
+    """
+    Fixture to return a correct response of the endpoint current.json in Karthuria API when only challenge exist
+
+    :return: A Response Mock of the requests library, with its respective ok value and current events information
+    """
+    complete_response = get_current_events_sample_response()
+    response = Mock(spec=Response)
+    response.ok = True
+    response.json.return_value = {
+        'rogue': complete_response['rogue']
+    }
+
+    return response
+
+
 @pytest.fixture()
 def complete_server_info():
     return [{

@@ -187,3 +187,32 @@ class TestGetCurrentEvents:
         assert response['challenges'][1].event_id == expected_challenge_id
         assert len(response['bosses']) == 2
         assert response['bosses'][0].event_id == expected_boss_id
+
+    def test_when_only_challenge_is_present(self, only_challenge_current_events_response):
+        # Arrange
+        expected_challenge_id = 1080009
+
+        # Act
+        with patch.object(requests, 'get', return_value=only_challenge_current_events_response) as requests_mock:
+            response = client.get_current_events()
+
+        # Assert
+        requests_mock.assert_called()
+        assert response is not None
+        assert len(response['challenges']) == 2
+        assert response['challenges'][1].event_id == expected_challenge_id
+        assert 'events' not in response
+        assert 'bosses' not in response
+
+    def test_when_response_is_no_successful(self, bad_response):
+        # Arrange
+        expected_error_message = 'Ups'
+
+        # Act
+        with patch.object(requests, 'get', return_value=bad_response) as requests_mock:
+            with pytest.raises(HTTPError) as exception:
+                client.get_current_events()
+
+        # Assert
+        requests_mock.assert_called()
+        assert str(exception.value) == expected_error_message
