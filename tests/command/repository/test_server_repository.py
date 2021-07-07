@@ -15,11 +15,11 @@ class TestLoadServers:
         # Arrange
         mock_is_file.return_value = True
         mock_load_json.return_value = complete_server_info
-        repository = ServerRepository(TEST_JSON)
         expected_name = TEST_SERVER
 
         # Act
-        result = repository.load_servers()
+        repository = ServerRepository(TEST_JSON)
+        result = repository.servers
 
         # Assert
         assert len(result) != 0
@@ -29,10 +29,10 @@ class TestLoadServers:
     def test_when_load_is_not_file(self, mock_is_file):
         # Arrange
         mock_is_file.return_value = False
-        repository = ServerRepository(TEST_JSON)
 
         # Act
-        result = repository.load_servers()
+        repository = ServerRepository(TEST_JSON)
+        result = repository.servers
 
         # Assert
         assert len(result) == 0
@@ -43,10 +43,10 @@ class TestLoadServers:
         # Arrange
         mock_is_file.return_value = True
         mock_load_json.return_value = "No Json"
-        repository = ServerRepository('test.json')
 
         # Act
-        result = repository.load_servers()
+        repository = ServerRepository('test.json')
+        result = repository.servers
 
         # Assert
         assert len(result) == 0
@@ -201,3 +201,44 @@ class TestCreateServer:
 
         # Assert
         assert len(repository.servers) != 0
+
+
+class TestReloadServers:
+
+    @patch('command.configuration.repository.server_repository.is_file')
+    @patch('command.configuration.repository.server_repository.load_json_file')
+    def test_when_new_data_is_added(self, mock_load_json, mock_is_file, complete_server_info, one_channels_server_info):
+        # Arrange
+        mock_is_file.return_value = True
+        mock_load_json.return_value = complete_server_info
+        repository = ServerRepository(TEST_JSON)
+        mock_load_json.return_value = one_channels_server_info
+        expected_name = TEST_SERVER
+
+        # Act
+        repository.reload_servers()
+        result = repository.servers
+
+        # Assert
+        assert result[0].name == expected_name
+        assert result[0].event_channel is None
+
+    @patch('command.configuration.repository.server_repository.is_file')
+    @patch('command.configuration.repository.server_repository.load_json_file')
+    def test_when_data_is_the_same(self, mock_load_json, mock_is_file, complete_server_info):
+        # Arrange
+        mock_is_file.return_value = True
+        mock_load_json.return_value = complete_server_info
+        repository = ServerRepository(TEST_JSON)
+        mock_load_json.return_value = complete_server_info
+        expected_name = TEST_SERVER
+        expected_event_channel_name = 'event-channel'
+
+        # Act
+        repository.reload_servers()
+        result = repository.servers
+
+        # Assert
+        assert result[0].name == expected_name
+        assert result[0].event_channel is not None
+        assert result[0].event_channel.name == expected_event_channel_name

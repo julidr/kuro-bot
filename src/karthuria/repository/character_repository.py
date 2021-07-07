@@ -16,7 +16,7 @@ class CharacterRepository:
 
     def __init__(self, client: KarthuriaClient):
         self.client = client
-        self.characters = self._load_characters()
+        self.characters = self.__load_characters()
 
     def get_characters(self) -> list:
         """
@@ -47,7 +47,7 @@ class CharacterRepository:
             if character.birthday == date:
                 return self.client.get_character(character.id)
 
-    def _load_characters(self) -> list:
+    def __load_characters(self) -> list:
         """
         Calls Karthuria API to load characters basic information
 

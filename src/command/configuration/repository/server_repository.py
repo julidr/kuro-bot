@@ -16,7 +16,7 @@ class ServerRepository:
 
     def __init__(self, servers_path: str):
         self.file_path = servers_path
-        self.servers = self.load_servers()
+        self.servers = self.__load_servers()
 
     def find_server_by_id(self, server_id: int) -> Server:
         """
@@ -45,9 +45,9 @@ class ServerRepository:
             server = Server(server_id, server_name)
         add_channel = getattr(server, 'add_{0}'.format(channel_type.value))
         add_channel(channel)
-        self._save_server(server)
+        self.__save_server(server)
 
-    def _save_server(self, new_server: Server) -> None:
+    def __save_server(self, new_server: Server) -> None:
         """
         Saves into a pre configured json file the information of a server.
         If the server already exist then it will update it.
@@ -71,7 +71,7 @@ class ServerRepository:
         except (TypeError, FileNotFoundError) as error:
             logging.error("[{0}] - Couldn't saver server [{1}] information: {2}".format(LOG_ID, new_server.name, error))
 
-    def load_servers(self) -> list:
+    def __load_servers(self) -> list:
         """
         Load server information from a file if exists otherwise will return an empty list
         :return: A list with the server information
@@ -88,6 +88,15 @@ class ServerRepository:
         except (JSONDecodeError, TypeError) as error:
             logging.error("[{0}] - Couldn't load server information: {1}".format(LOG_ID, error))
         return servers
+
+    def reload_servers(self) -> None:
+        """
+        Refresh the current server information of the file into the ServerRepository.
+        This is a measure to keep data updated.
+
+        :return: None
+        """
+        self.servers = self.__load_servers()
 
 
 def convert_to_server(server_dict: dict) -> Server:
