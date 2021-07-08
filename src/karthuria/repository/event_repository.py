@@ -42,6 +42,15 @@ class EventRepository:
             logging.error("[{0}] - Couldn't retrieve current events {1}".format(LOG_ID, error))
         return current_events
 
+    def reload_events(self) -> None:
+        """
+        Refresh the current event information of the API into the EventRepository.
+        This is a measure to keep data updated.
+
+        :return: None
+        """
+        self.events = self.__load_events()
+
     def __load_events(self) -> list:
         """
         Calls Karthuria API to get all events information, mostly its names

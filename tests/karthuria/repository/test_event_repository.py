@@ -1,8 +1,10 @@
+import datetime
 from unittest.mock import Mock
 
 from requests import HTTPError
 
 from karthuria.client import KarthuriaClient
+from karthuria.model.event import Event
 from karthuria.repository.event_repository import EventRepository
 
 
@@ -94,3 +96,37 @@ class TestGetEventNameById:
 
         # Assert
         assert response is None
+
+
+class TestReloadEvents:
+
+    def test_when_new_data_is_added(self, event):
+        # Arrange
+        mock_client = Mock(spec=KarthuriaClient)
+        new_event = Event(2, name='Event Test 2', end_date=datetime.datetime.now().timestamp(),
+                          start_date=datetime.datetime.now().timestamp())
+        mock_client.get_events.return_value = [event]
+        repository = EventRepository(mock_client)
+        mock_client.get_events.return_value = [event, new_event]
+
+        # Act
+        repository.reload_events()
+        response = repository.events
+
+        # Assert
+        assert len(response) == 2
+        assert response[1].event_id == 2
+
+    def test_when_data_is_the_same(self, event):
+        # Arrange
+        mock_client = Mock(spec=KarthuriaClient)
+        mock_client.get_events.return_value = [event]
+        repository = EventRepository(mock_client)
+
+        # Act
+        repository.reload_events()
+        response = repository.events
+
+        # Assert
+        assert len(response) == 1
+        assert response[0].event_id == 1
