@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from utils.date_utils import convert_str_to_date, convert_date_to_str
+from utils.date_utils import convert_str_to_date, convert_date_to_str, get_days_diff
 
 
 class TestConvertStrToDate:
@@ -167,3 +167,42 @@ class TestConvertDateToStr:
 
         # Assert
         assert expected_result == result
+
+
+class TestGetDaysDiff:
+
+    def test_when_first_date_is_bigger_than_second_date(self):
+        # Arrange
+        first_date = (datetime.datetime.now()) + datetime.timedelta(days=1)
+        second_date = datetime.datetime.now()
+        expected_result = 1
+
+        # Act
+        result = get_days_diff(first_date, second_date)
+
+        # Assert
+        assert result == expected_result
+
+    def test_when_second_date_is_bigger_than_first_date(self):
+        # Arrange
+        first_date = datetime.datetime.now()
+        second_date = (datetime.datetime.now()) + datetime.timedelta(days=10)
+        expected_result = 10
+
+        # Act
+        result = get_days_diff(first_date, second_date)
+
+        # Assert
+        assert result == expected_result
+
+    def test_when_dates_are_the_same(self):
+        # Arrange
+        first_date = datetime.datetime.now()
+        second_date = datetime.datetime.now()
+        expected_result = 0
+
+        # Act
+        result = get_days_diff(first_date, second_date)
+
+        # Assert
+        assert result == expected_result
