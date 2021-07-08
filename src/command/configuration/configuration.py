@@ -30,7 +30,7 @@ class ConfigurationCommand(commands.Cog):
         :return: None
         """
         if channel_name is None:
-            await ctx.send('Hmm...Please specify the channel name.'.format(channel_name))
+            await ctx.send('Hmm...Please specify the channel name.')
             return
 
         channels = ctx.guild.channels
@@ -55,7 +55,7 @@ class ConfigurationCommand(commands.Cog):
         :return: None
         """
         if channel_name is None:
-            await ctx.send('Hmm...Please specify the channel name.'.format(channel_name))
+            await ctx.send('Hmm...Please specify the channel name.')
             return
 
         channels = ctx.guild.channels
