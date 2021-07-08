@@ -101,6 +101,11 @@ class BirthdayCommand(commands.Cog):
 
     @birthday_reminder.before_loop
     async def before_birthday_reminder(self):
+        """
+        Setup for the birthday reminder.
+
+        :return: None
+        """
         logging.info('[{0}] - Waiting to start birthdays reminders...'.format(LOG_ID))
         await self.bot.wait_until_ready()
         logging.info('[{0}] - Birthday reminders ready!'.format(LOG_ID))
