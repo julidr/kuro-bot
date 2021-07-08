@@ -24,6 +24,7 @@ class ConfigurationCommand(commands.Cog):
     async def birthday_announcements(self, ctx: Context, channel_name: str = None) -> None:
         """
         Allows the configuration of birthday announcements channel of preference for a Discord Server
+
         :param ctx: Discord context
         :param channel_name: Name of the channel where notification will be send
         :return: None
@@ -40,6 +41,31 @@ class ConfigurationCommand(commands.Cog):
                 self.server_repository.create_server(ctx.guild.id, ctx.guild.name, channel.id, channel.name,
                                                      ChannelType.BIRTHDAY)
                 await ctx.send('Fait! - Birthday channel event [{0}] was set'.format(channel_name))
+                return
+
+        await ctx.send("Je suis desolé - I wasn't able to find  [{0}]".format(channel_name))
+
+    @commands.command(pass_context=True)
+    async def events_announcements(self, ctx: Context, channel_name: str = None) -> None:
+        """
+        Allows the configuration of events announcements channel of preference for a Discord Server
+
+        :param ctx: Discord context
+        :param channel_name: Name of the channel where notification will be send
+        :return: None
+        """
+        if channel_name is None:
+            await ctx.send('Hmm...Please specify the channel name.'.format(channel_name))
+            return
+
+        channels = ctx.guild.channels
+        logging.info('[{0}] - Looking for channel [{1}] in server [{2}]'.format(LOG_ID, channel_name, ctx.guild.name))
+        for channel in channels:
+            if channel.name == channel_name:
+                logging.info('[{0}] - Channel [{1}] found'.format(LOG_ID, channel_name))
+                self.server_repository.create_server(ctx.guild.id, ctx.guild.name, channel.id, channel.name,
+                                                     ChannelType.EVENT)
+                await ctx.send('Fait! - Event channel event [{0}] was set'.format(channel_name))
                 return
 
         await ctx.send("Je suis desolé - I wasn't able to find  [{0}]".format(channel_name))
