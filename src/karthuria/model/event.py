@@ -50,7 +50,6 @@ class Boss(Event):
 
     def __init__(self, boss_id: int, end_date: int, name: str = None, rarity: int = None, hp_percentage: str = None):
         super().__init__(boss_id, end_date, name, None)
-        self.icon = self.ENEMY_ICON_URL.format(boss_id)
         self.rarity = rarity
         self.hp_percentage = hp_percentage
 
@@ -59,3 +58,6 @@ class Boss(Event):
 
     def set_hp_percentage(self, hp_percentage: str) -> None:
         self.hp_percentage = hp_percentage
+
+    def set_icon(self, icon_id: int):
+        self.icon = self.ENEMY_ICON_URL.format(icon_id)
