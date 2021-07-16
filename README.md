@@ -21,24 +21,42 @@ This bot works either with `!` or `$` prefixes.
 !birthday claudine
 ```
 
-- **birthday_announcements**: Allow you to set the channel where you want to receive birthdays notifications.
+- **birthday_announcements**: Allow you to set the channel where you want to receive birthdays notifications and the
+  role of these notifications. If no rol is specified then it will use `@everyone`. <br><br>
+  First value is the channel name, second value the role name.
 
 ```
 !birthday_announcements general
+!birthday_announcements general admins
 ```
-- **current_events**: Returns a list with the different current ongoing events in all Re-live servers.
-These events are classified as _events_, _challenges_ and _score attack_ (bosses).
+
+- **current_events**: Returns a list with the different current ongoing events in all Re-live servers. These events are
+  classified as _events_, _challenges_ and _score attack_ (bosses).
 
 ```
 !current_events
+```
+
+- **events_announcements**: Allow you to set the channel where you want to receive events notifications and the role of
+  these notifications. If no rol is specified then it will use `@everyone`. <br><br>
+  First value is the channel name, second value the role name.
+
+```
+!events_announcements general
+!events_announcements general admins
 ```
 
 ### Tasks ###
 
 This bot has the following automatic tasks that will be executed in any server.
 
-- **birthday reminders**: In the birthday of one of the stage girls will send a notification to a preconfigured channel.
-  if no channel was configured then it won't send them. _This task use @everyone._
+- **birthday reminders**: In the birthday of one of the stage girls will send a notification to a preconfigured channel
+  and rol. <br>
+  If no channel was configured then it won't send them and if no role was configured it will use `@everyone`.
+
+- **events reminders**: If an event is about to end in one day will send a notification to a preconfigured channel and
+  rol. <br>
+  If no channel was configured then it won't send them and if no role was configured it will use `@everyone`.
 
 ## License ##
 
