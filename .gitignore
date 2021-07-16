@@ -1,5 +1,8 @@
-# IDE directories
+# Stuff that I don't need to commit
 .idea
+.pytest_cache
+.coverage
+
 
 # Virtual envinronment folders inside project
 venv
