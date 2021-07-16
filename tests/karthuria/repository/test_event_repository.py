@@ -103,8 +103,10 @@ class TestReloadEvents:
     def test_when_new_data_is_added(self, event):
         # Arrange
         mock_client = Mock(spec=KarthuriaClient)
-        new_event = Event(2, name='Event Test 2', end_date=datetime.datetime.now().timestamp(),
-                          start_date=datetime.datetime.now().timestamp())
+        new_event = Event(2)
+        new_event.set_name('Event Test 2')
+        new_event.set_end_date(datetime.datetime.now().timestamp())
+        new_event.set_start_date(datetime.datetime.now().timestamp())
         mock_client.get_events.return_value = [event]
         repository = EventRepository(mock_client)
         mock_client.get_events.return_value = [event, new_event]
