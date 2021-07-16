@@ -3,7 +3,7 @@ import logging
 from requests import HTTPError
 
 from karthuria.client import KarthuriaClient
-from karthuria.model.character import Dress
+from karthuria.model.character import Enemy
 
 LOG_ID = "EnemyRepository"
 logging.basicConfig(level=logging.INFO)
@@ -17,7 +17,7 @@ class EnemyRepository:
     def __init__(self, client: KarthuriaClient):
         self.client = client
 
-    def get_enemy_by_id(self, enemy_id: int) -> Dress:
+    def get_enemy_by_id(self, enemy_id: int) -> Enemy:
         """
         Search for an Enemy information by a given ID.
         If its not found returns None

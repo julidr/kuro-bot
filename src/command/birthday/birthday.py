@@ -7,6 +7,7 @@ from discord.ext.commands import Context
 
 from command.configuration.repository.server_repository import ServerRepository
 from command.initializer import Initializer
+from karthuria.model.character import Character
 from karthuria.repository.character_repository import CharacterRepository
 from utils.date_utils import convert_date_to_str
 from utils.discord_utils import get_discord_color
@@ -72,21 +73,6 @@ class BirthdayCommand(commands.Cog):
         if birthday_girl is not None:
             logging.info('[{0}] - Birthday of {1} found'.format(LOG_ID, birthday_girl.name))
 
-            title = 'Bon anniversaire {0}!!'.format(birthday_girl.name)
-            pronoun = 'my' if 'Claudine' in birthday_girl.name else birthday_girl.name
-            message = "@everyone Today is {0} birthday!! Let's celebrate it.".format(pronoun)
-            rgb = birthday_girl.color.rgb
-
-            embed = discord.Embed(title=title, description=message, color=get_discord_color(rgb))
-            embed.set_thumbnail(url=birthday_girl.portrait)
-            embed.set_image(url=SCHOOL_ICON_URL.format(birthday_girl.school))
-            embed.add_field(name='Description', value=birthday_girl.description, inline=False)
-            embed.add_field(name='Birthday', value=convert_date_to_str(birthday_girl.birthday), inline=False)
-            embed.add_field(name='Voice Actor', value=birthday_girl.seiyuu, inline=False)
-            embed.add_field(name='Likes', value=birthday_girl.likes, inline=True)
-            embed.add_field(name='Dislikes', value=birthday_girl.dislikes, inline=True)
-            embed.add_field(name='School', value=birthday_girl.school.description, inline=False)
-
             for guild in self.bot.guilds:
                 server = self.server_repository.find_server_by_id(guild.id)
                 if server is None:
@@ -94,6 +80,7 @@ class BirthdayCommand(commands.Cog):
                 else:
                     if server.birthday_channel is not None:
                         channel = self.bot.get_channel(server.birthday_channel.channel_id)
+                        embed = build_birthday_reminder_embed(birthday_girl, server.birthday_channel.announcement_rol)
                         await channel.send(embed=embed)
                     else:
                         logging.warning('[{0}] - Missing configuration for birthday channel '
@@ -101,9 +88,41 @@ class BirthdayCommand(commands.Cog):
 
     @birthday_reminder.before_loop
     async def before_birthday_reminder(self):
+        """
+        Setup for the birthday reminder.
+
+        :return: None
+        """
         logging.info('[{0}] - Waiting to start birthdays reminders...'.format(LOG_ID))
         await self.bot.wait_until_ready()
         logging.info('[{0}] - Birthday reminders ready!'.format(LOG_ID))
+
+
+def build_birthday_reminder_embed(birthday_girl: Character, server_rol: int) -> discord.Embed:
+    """
+    Build the birthday reminder message with the respective format and given information.
+
+    :param birthday_girl: The stage girl that is celebrating its birthday
+    :param server_rol: The rol that will be use to announce the birthday
+    :return: Discord Embed with the defined format to use
+    """
+
+    title = 'Bon anniversaire {0}!!'.format(birthday_girl.name)
+    pronoun = 'my' if 'Claudine' in birthday_girl.name else birthday_girl.name
+    message = "<@&{0}> Today is {1} birthday!! Let's celebrate it.".format(server_rol, pronoun)
+    rgb = birthday_girl.color.rgb
+
+    embed = discord.Embed(title=title, description=message, color=get_discord_color(rgb))
+    embed.set_thumbnail(url=birthday_girl.portrait)
+    embed.set_image(url=SCHOOL_ICON_URL.format(birthday_girl.school))
+    embed.add_field(name='Description', value=birthday_girl.description, inline=False)
+    embed.add_field(name='Birthday', value=convert_date_to_str(birthday_girl.birthday), inline=False)
+    embed.add_field(name='Voice Actor', value=birthday_girl.seiyuu, inline=False)
+    embed.add_field(name='Likes', value=birthday_girl.likes, inline=True)
+    embed.add_field(name='Dislikes', value=birthday_girl.dislikes, inline=True)
+    embed.add_field(name='School', value=birthday_girl.school.description, inline=False)
+
+    return embed
 
 
 def special_message_birthday(name: str) -> str:

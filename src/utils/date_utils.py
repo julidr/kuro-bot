@@ -24,3 +24,14 @@ def convert_date_to_str(date, date_format: str = '%B %d', date_str_format: str =
     if type(date) == str:
         date = convert_str_to_date(date, date_str_format)
     return datetime.strftime(date, date_format)
+
+
+def get_days_diff(first_date: datetime, second_date: datetime) -> int:
+    """
+    Calculates the days difference between two dates.
+
+    :param first_date: datetime To use for the diff calculations
+    :param second_date: datetime To use for the diff calculations
+    :return: The days difference as a positive integer
+    """
+    return abs((first_date.date() - second_date.date()).days)

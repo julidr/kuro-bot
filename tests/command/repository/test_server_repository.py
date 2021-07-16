@@ -101,19 +101,22 @@ class TestCreateServer:
         expected_server_name = server_with_channels.name
         expected_channel_id = server_with_channels.birthday_channel.channel_id
         expected_channel_name = server_with_channels.birthday_channel.name
+        expected_channel_rol = server_with_channels.birthday_channel.announcement_rol
 
         # Act
         repository.create_server(expected_server_id,
                                  expected_server_name,
                                  expected_channel_id,
                                  expected_channel_name,
-                                 ChannelType.BIRTHDAY)
+                                 ChannelType.BIRTHDAY,
+                                 expected_channel_rol)
 
         # Assert
         assert len(repository.servers) != 0
         assert repository.servers[0].name == expected_server_name
         assert repository.servers[0].birthday_channel is not None
         assert repository.servers[0].birthday_channel.name == expected_channel_name
+        assert repository.servers[0].birthday_channel.announcement_rol == expected_channel_rol
         assert repository.servers[0].event_channel is None
 
     @patch('command.configuration.repository.server_repository.is_file')
@@ -130,19 +133,22 @@ class TestCreateServer:
         expected_server_name = server_with_channels.name
         expected_channel_id = server_with_channels.event_channel.channel_id
         expected_channel_name = server_with_channels.event_channel.name
+        expected_channel_rol = server_with_channels.event_channel.announcement_rol
 
         # Act
         repository.create_server(expected_server_id,
                                  expected_server_name,
                                  expected_channel_id,
                                  expected_channel_name,
-                                 ChannelType.EVENT)
+                                 ChannelType.EVENT,
+                                 expected_channel_rol)
 
         # Assert
         assert len(repository.servers) != 0
         assert repository.servers[0].name == expected_server_name
         assert repository.servers[0].event_channel is not None
         assert repository.servers[0].event_channel.name == expected_channel_name
+        assert repository.servers[0].event_channel.announcement_rol == expected_channel_rol
         assert repository.servers[0].birthday_channel is None
 
     @patch('command.configuration.repository.server_repository.is_file')
@@ -160,6 +166,7 @@ class TestCreateServer:
         expected_server_name = TEST_SERVER
         expected_event_channel_id = server_with_channels.event_channel.channel_id
         expected_event_channel_name = server_with_channels.event_channel.name
+        expected_event_channel_rol = server_with_channels.event_channel.announcement_rol
         expected_birthday_channel_name = 'birthday-channel'
 
         # Act
@@ -167,13 +174,15 @@ class TestCreateServer:
                                  expected_server_name,
                                  expected_event_channel_id,
                                  expected_event_channel_name,
-                                 ChannelType.EVENT)
+                                 ChannelType.EVENT,
+                                 expected_event_channel_rol)
 
         # Assert
         assert len(repository.servers) != 0
         assert repository.servers[0].name == expected_server_name
         assert repository.servers[0].event_channel is not None
         assert repository.servers[0].event_channel.name == expected_event_channel_name
+        assert repository.servers[0].event_channel.announcement_rol == expected_event_channel_rol
         assert repository.servers[0].birthday_channel is not None
         assert repository.servers[0].birthday_channel.name == expected_birthday_channel_name
 
@@ -191,13 +200,15 @@ class TestCreateServer:
         expected_server_name = TEST_SERVER
         expected_event_channel_id = 1
         expected_event_channel_name = 'Test Channel'
+        expected_event_channel_rol = 1
 
         # Act
         repository.create_server(expected_server_id,
                                  expected_server_name,
                                  expected_event_channel_id,
                                  expected_event_channel_name,
-                                 ChannelType.EVENT)
+                                 ChannelType.EVENT,
+                                 expected_event_channel_rol)
 
         # Assert
         assert len(repository.servers) != 0

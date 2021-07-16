@@ -3,9 +3,10 @@ class Channel:
     Model class of a Discord Channel in Kuro Bot Domain
     """
 
-    def __init__(self, channel_id: int, name: str):
+    def __init__(self, channel_id: int, name: str, announcement_rol: int):
         self.channel_id = channel_id
         self.name = name
+        self.announcement_rol = announcement_rol
 
 
 class Server:
