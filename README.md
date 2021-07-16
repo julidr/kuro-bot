@@ -21,8 +21,8 @@ This bot works either with `!` or `$` prefixes.
 !birthday claudine
 ```
 
-- **birthday_announcements**: Allow you to set the channel where you want to receive birthdays notifications and the
-  role of these notifications. If no rol is specified then it will use `@everyone`. <br><br>
+- **birthday_announcements**: Allow server admins to set the channel where they want to receive birthdays notifications
+  and the role of these notifications. If no rol is specified then it will use `@everyone`. <br><br>
   First value is the channel name, second value the role name.
 
 ```
@@ -37,8 +37,8 @@ This bot works either with `!` or `$` prefixes.
 !current_events
 ```
 
-- **events_announcements**: Allow you to set the channel where you want to receive events notifications and the role of
-  these notifications. If no rol is specified then it will use `@everyone`. <br><br>
+- **events_announcements**: Allow server admins to set the channel where they want to receive events notifications and
+  the role of these notifications. If no rol is specified then it will use `@everyone`. <br><br>
   First value is the channel name, second value the role name.
 
 ```

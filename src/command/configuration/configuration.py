@@ -34,6 +34,10 @@ class ConfigurationCommand(commands.Cog):
             If is not set then everyone will be by default.
         :return: None
         """
+        if not ctx.message.author.guild_permissions.administrator:
+            await ctx.send('Désolé, tout utilisateur. Only server admins can use this command.')
+            return
+
         if channel_name is None:
             await ctx.send('Hmm...Please specify the channel name.')
             return
@@ -65,6 +69,10 @@ class ConfigurationCommand(commands.Cog):
             If is not set then everyone will be by default.
         :return: None
         """
+        if not ctx.message.author.guild_permissions.administrator:
+            await ctx.send('Désolé, tout utilisateur. Only server admins can use this command.')
+            return
+
         if channel_name is None:
             await ctx.send('Hmm...Please specify the channel name.')
             return
