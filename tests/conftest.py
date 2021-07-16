@@ -174,11 +174,13 @@ def complete_server_info():
         "name": "Test Server",
         "birthday_channel": {
             "channel_id": 1,
-            "name": "birthday-channel"
+            "name": "birthday-channel",
+            "announcement_rol": 1
         },
         "event_channel": {
             "channel_id": 1,
-            "name": "event-channel"
+            "name": "event-channel",
+            "announcement_rol": 2
         }
     }]
 
@@ -190,7 +192,8 @@ def one_channels_server_info():
         "name": "Test Server",
         "birthday_channel": {
             "channel_id": 1,
-            "name": "birthday-channel"
+            "name": "birthday-channel",
+            "announcement_rol": 1
         },
         "event_channel": ""
     }]
@@ -198,8 +201,8 @@ def one_channels_server_info():
 
 @pytest.fixture()
 def server_with_channels():
-    birthday_channel = Channel(1, 'birthday-channel')
-    event_channel = Channel(2, 'event_channel')
+    birthday_channel = Channel(1, 'birthday-channel', 1)
+    event_channel = Channel(2, 'event_channel', 2)
     server = Server(1, 'Test Channel', birthday_channel, event_channel)
     return server
 

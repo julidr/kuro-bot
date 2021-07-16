@@ -29,7 +29,7 @@ class ServerRepository:
                 return server
 
     def create_server(self, server_id: int, server_name: str, channel_id: int, channel_name: str,
-                      channel_type: ChannelType) -> None:
+                      channel_type: ChannelType, channel_rol: int) -> None:
         """
         Create a Server with its respective channel information based on given information
         :param server_id: The id that identifies the server
@@ -37,10 +37,13 @@ class ServerRepository:
         :param channel_id: The id that identifies the channel
         :param channel_name: Name of the channel
         :param channel_type: Channel type to be added or replaced in the server
+        :param channel_rol: Channel Rol to announce information
         :return: None
         """
         server = self.find_server_by_id(server_id)
-        channel = Channel(channel_id, channel_name)
+
+        channel = Channel(channel_id, channel_name, channel_rol)
+
         if server is None:
             server = Server(server_id, server_name)
         add_channel = getattr(server, 'add_{0}'.format(channel_type.value))
@@ -111,12 +114,14 @@ def convert_to_server(server_dict: dict) -> Server:
 
     if server_dict.get('birthday_channel') != '':
         birthday_channel = Channel(server_dict['birthday_channel']['channel_id'],
-                                   server_dict['birthday_channel']['name'])
+                                   server_dict['birthday_channel']['name'],
+                                   server_dict['birthday_channel']['announcement_rol'])
         server.add_birthday_channel(birthday_channel)
 
     if server_dict.get('event_channel') != '':
         event_channel = Channel(server_dict['event_channel']['channel_id'],
-                                server_dict['event_channel']['name'])
+                                server_dict['event_channel']['name'],
+                                server_dict['event_channel']['announcement_rol'])
         server.add_event_channel(event_channel)
 
     return server

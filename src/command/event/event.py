@@ -7,7 +7,7 @@ from discord.ext.commands import Context
 
 from command.configuration.repository.server_repository import ServerRepository
 from command.initializer import Initializer
-from karthuria.model.event import Challenge, Boss
+from karthuria.model.event import Challenge, Boss, Event
 from karthuria.repository.dress_repository import DressRepository
 from karthuria.repository.enemy_repository import EnemyRepository
 from karthuria.repository.event_repository import EventRepository
@@ -97,33 +97,7 @@ class EventCommand(commands.Cog):
             self.server_repository.reload_servers()
 
             events_about_to_end = self.__get_complete_event_data(events_about_to_end)
-
             super_event = events_about_to_end[0]
-
-            star_emoji = ':star:'
-            title = '{0} is About to End!!'.format(super_event.name)
-            description = '@everyone The following events end in one day!! Hurry to finish them - Pour moi :heart:'
-            embed = discord.Embed(title=title, description=description, color=get_discord_color(RELIVE_RGB))
-
-            embed.add_field(name='End Date', value=super_event.end_date, inline=False)
-            embed.add_field(name='Name', value=super_event.name, inline=True)
-            embed.set_image(url=super_event.icon)
-
-            if isinstance(super_event, Challenge) or isinstance(super_event, Boss):
-                embed.add_field(name='Rarity', value=star_emoji * super_event.rarity, inline=True)
-            if isinstance(super_event, Boss):
-                embed.add_field(name='Life', value='{}%'.format(super_event.hp_percentage), inline=True)
-
-            if events_about_to_end_count > 1:
-
-                additional_events_message = ''
-                additional_events_message_format = '{0} {1} \n'
-                bullets_emoji = ':white_small_square:'
-
-                for additional_events in events_about_to_end[1::]:
-                    additional_events_message += additional_events_message_format.format(bullets_emoji,
-                                                                                         additional_events.name)
-                embed.add_field(name="Additional Events that Ends", value=additional_events_message, inline=False)
 
             for guild in self.bot.guilds:
                 server = self.server_repository.find_server_by_id(guild.id)
@@ -132,6 +106,8 @@ class EventCommand(commands.Cog):
                 else:
                     if server.event_channel is not None:
                         channel = self.bot.get_channel(server.event_channel.channel_id)
+                        embed = build_event_reminder_end_embed(super_event, events_about_to_end,
+                                                               server.event_channel.announcement_rol)
                         await channel.send(embed=embed)
                     else:
                         logging.warning('[{0}] - Missing configuration for event channel '
@@ -184,6 +160,46 @@ def get_events_about_to_end(current_events: list) -> list:
     """
     today = datetime.now()
     return [current_event for current_event in current_events if get_days_diff(today, current_event.end_date) == 1]
+
+
+def build_event_reminder_end_embed(super_event: Event, events_about_to_end: list, server_rol: int) -> discord.Embed:
+    """
+    Build the event reminder message with the respective format and given information.
+
+    :param super_event: Event that is going to be show with more details than others
+    :param events_about_to_end: List with all events that are about to finish
+    :param server_rol: The rol that will be use to announce the event
+    :return: Discord Embed with the defined format to use
+    """
+    star_emoji = ':star:'
+    title = '{0} is About to End!!'.format(super_event.name)
+    description = '<@&{0}> The following events end in one day!! ' \
+                  'Hurry to finish them - Pour moi :heart:'.format(server_rol)
+    embed = discord.Embed(title=title, description=description, color=get_discord_color(RELIVE_RGB))
+
+    embed.add_field(name='End Date', value=super_event.end_date, inline=False)
+    embed.add_field(name='Name', value=super_event.name, inline=True)
+    embed.set_image(url=super_event.icon)
+
+    if isinstance(super_event, Challenge) or isinstance(super_event, Boss):
+        embed.add_field(name='Rarity', value=star_emoji * super_event.rarity, inline=True)
+    if isinstance(super_event, Boss):
+        embed.add_field(name='Life', value='{}%'.format(super_event.hp_percentage), inline=True)
+
+    events_about_to_end_count = len(events_about_to_end)
+
+    if events_about_to_end_count > 1:
+
+        additional_events_message = ''
+        additional_events_message_format = '{0} {1} \n'
+        bullets_emoji = ':white_small_square:'
+
+        for additional_events in events_about_to_end[1::]:
+            additional_events_message += additional_events_message_format.format(bullets_emoji,
+                                                                                 additional_events.name)
+        embed.add_field(name="Additional Events that Ends", value=additional_events_message, inline=False)
+
+    return embed
 
 
 def setup(my_bot: commands.Bot) -> None:
