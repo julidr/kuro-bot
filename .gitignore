@@ -2,6 +2,7 @@
 .idea
 .pytest_cache
 .coverage
+__pycache__/
 
 
 # Virtual envinronment folders inside project
