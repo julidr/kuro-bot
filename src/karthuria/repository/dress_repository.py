@@ -6,7 +6,6 @@ from karthuria.client import KarthuriaClient
 from karthuria.model.character import Dress
 
 LOG_ID = "DressRepository"
-logging.basicConfig(level=logging.INFO)
 
 
 class DressRepository:
@@ -28,7 +27,7 @@ class DressRepository:
         dress = None
         try:
             dress = self.client.get_dress(dress_id)
-            logging.info('[{0}] - Dress wit id [{1}] retrieved successfully'.format(LOG_ID, dress_id))
+            logging.debug('[{0}] - Dress wit id [{1}] retrieved successfully'.format(LOG_ID, dress_id))
         except HTTPError as error:
             logging.error("[{0}] - Couldn't retrieve Dress with id [{1}]: {2}".format(LOG_ID, dress_id, error))
         return dress

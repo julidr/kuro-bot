@@ -6,7 +6,6 @@ from karthuria.client import KarthuriaClient
 from karthuria.model.character import Enemy
 
 LOG_ID = "EnemyRepository"
-logging.basicConfig(level=logging.INFO)
 
 
 class EnemyRepository:
@@ -28,7 +27,7 @@ class EnemyRepository:
         enemy = None
         try:
             enemy = self.client.get_enemy(enemy_id)
-            logging.info('[{0}] - Enemy wit id [{1}] retrieved successfully'.format(LOG_ID, enemy_id))
+            logging.debug('[{0}] - Enemy wit id [{1}] retrieved successfully'.format(LOG_ID, enemy_id))
         except HTTPError as error:
             logging.error("[{0}] - Couldn't retrieve Enemy with id [{1}]: {2}".format(LOG_ID, enemy_id, error))
         return enemy

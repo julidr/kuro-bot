@@ -15,7 +15,6 @@ from utils.date_utils import get_days_diff
 from utils.discord_utils import get_discord_color
 
 LOG_ID = "EventCommand"
-logging.basicConfig(level=logging.INFO)
 
 RELIVE_RGB = (234, 1, 36)
 
@@ -120,9 +119,9 @@ class EventCommand(commands.Cog):
 
         :return: None
         """
-        logging.info('[{0}] - Waiting to start events reminders...'.format(LOG_ID))
+        logging.debug('[{0}] - Waiting to start events reminders...'.format(LOG_ID))
         await self.bot.wait_until_ready()
-        logging.info('[{0}] - Events reminders ready!'.format(LOG_ID))
+        logging.debug('[{0}] - Events reminders ready!'.format(LOG_ID))
 
     def __get_complete_event_data(self, events: list) -> list:
         """
