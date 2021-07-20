@@ -6,7 +6,6 @@ from karthuria.client import KarthuriaClient
 from karthuria.model.character import Character
 
 LOG_ID = "CharacterRepository"
-logging.basicConfig(level=logging.INFO)
 
 
 class CharacterRepository:
@@ -56,7 +55,7 @@ class CharacterRepository:
         characters = []
         try:
             characters = self.client.get_characters()
-            logging.info('[{0}] - Characters information loaded successfully'.format(LOG_ID))
+            logging.debug('[{0}] - Characters information loaded successfully'.format(LOG_ID))
         except HTTPError as error:
             logging.error("[{0}] - Couldn't load characters information {1}".format(LOG_ID, error))
         return characters
