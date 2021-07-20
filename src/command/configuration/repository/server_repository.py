@@ -6,7 +6,6 @@ from command.configuration.model.server import Server, Channel
 from utils.file_utils import is_file, load_json_file, write_json_file
 
 LOG_ID = "ServerRepository"
-logging.basicConfig(level=logging.INFO)
 
 
 class ServerRepository:
@@ -70,7 +69,7 @@ class ServerRepository:
             if not found:
                 self.servers.append(new_server)
             write_json_file(self.file_path, [convert_to_dict(server) for server in self.servers])
-            logging.info('[{0}] - Successfully saved server [{1}] information'.format(LOG_ID, new_server.name))
+            logging.debug('[{0}] - Successfully saved server [{1}] information'.format(LOG_ID, new_server.name))
         except (TypeError, FileNotFoundError) as error:
             logging.error("[{0}] - Couldn't saver server [{1}] information: {2}".format(LOG_ID, new_server.name, error))
 
@@ -85,7 +84,7 @@ class ServerRepository:
                 servers_file = load_json_file(self.file_path)
                 for server in servers_file:
                     servers.append(convert_to_server(server))
-                logging.info('[{0}] - Server information loaded successfully'.format(LOG_ID))
+                logging.debug('[{0}] - Server information loaded successfully'.format(LOG_ID))
             else:
                 logging.error("[{0}] - Couldn't load server information, Not file found".format(LOG_ID))
         except (JSONDecodeError, TypeError) as error:

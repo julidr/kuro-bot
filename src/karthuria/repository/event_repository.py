@@ -5,7 +5,6 @@ from requests import HTTPError
 from karthuria.client import KarthuriaClient
 
 LOG_ID = "EventRepository"
-logging.basicConfig(level=logging.INFO)
 
 
 class EventRepository:
@@ -37,7 +36,7 @@ class EventRepository:
         current_events = {}
         try:
             current_events = self.client.get_current_events()
-            logging.info('[{0}] - Current Events retrieved successfully'.format(LOG_ID))
+            logging.debug('[{0}] - Current Events retrieved successfully'.format(LOG_ID))
         except HTTPError as error:
             logging.error("[{0}] - Couldn't retrieve current events {1}".format(LOG_ID, error))
         return current_events
@@ -60,7 +59,7 @@ class EventRepository:
         events = []
         try:
             events = self.client.get_events()
-            logging.info('[{0}] - Events retrieved successfully'.format(LOG_ID))
+            logging.debug('[{0}] - Events retrieved successfully'.format(LOG_ID))
         except HTTPError as error:
             logging.error("[{0}] - Couldn't retrieve events {1}".format(LOG_ID, error))
         return events

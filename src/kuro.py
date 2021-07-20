@@ -1,4 +1,5 @@
 import logging
+import logging.config
 import os
 import sys
 import traceback
@@ -8,12 +9,11 @@ from discord.ext import commands
 from utils.file_utils import load_json_file
 
 LOG_ID = 'KuroBotInitializer'
-logging.basicConfig(level=logging.INFO,
-                    format='[%(levelname)s] %(asctime)s - %(message)s',
-                    datefmt='%m/%d/%Y %I:%M:%S %p')
-
 settings_path = os.getenv('SETTINGS_PATH', 'settings.json')
+logging_path = os.getenv('LOGGING_PATH', 'logging.conf')
+
 config = load_json_file(settings_path)
+logging.config.fileConfig(logging_path)
 
 description = 'Your favorite french girl made a bot, that delivers basic information of Starlight franchise'
 prefixes = config.get('prefixes')
