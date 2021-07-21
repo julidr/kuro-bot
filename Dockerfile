@@ -17,4 +17,4 @@ COPY src/ .
 ENV PYTHONPATH=/kuro-bot
 
 # command to run on container start
-CMD python kuro.py
+CMD ["python", "kuro.py"]
