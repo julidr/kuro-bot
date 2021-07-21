@@ -16,5 +16,8 @@ COPY src/ .
 # set PYTHONPATH env variable
 ENV PYTHONPATH=/kuro-bot
 
+# Create directory of logs
+RUN mkdir -p /kuro-bot/data/logs
+
 # command to run on container start
 CMD ["python", "kuro.py"]
