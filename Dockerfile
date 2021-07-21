@@ -16,8 +16,5 @@ COPY src/ .
 # set PYTHONPATH env variable
 ENV PYTHONPATH=/kuro-bot
 
-# create project volume
-VOLUME ["/data"]
-
 # command to run on container start
 CMD ["python", "kuro.py"]
