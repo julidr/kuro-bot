@@ -19,9 +19,5 @@ COPY tests/ .
 # set PYTHONPATH env variable
 ENV PYTHONPATH=/kuro-bot
 
-# commant to run test phase
-FROM base as test
-CMD ["pytest", "tests/"]
-
 # command to run on container start
 CMD [ "python", "src/kuro.py" ]

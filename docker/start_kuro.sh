@@ -8,7 +8,7 @@ docker secret create kuro-bot-secret $KURO_PATH_DATA/kuro-settings.json
 
 echo "Building Kuro Bot Image"
 cd $KURO_PATH
-docker build .
+docker build --tag kuro-bot:latest .
 
 echo "Starting Kuro Bot Service"
 docker service create \
