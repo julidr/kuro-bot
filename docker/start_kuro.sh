@@ -8,7 +8,9 @@ docker secret create kuro-bot-secret $KURO_PATH_DATA/kuro-settings.json
 
 echo "Building Kuro Bot Image"
 cd $KURO_PATH
-docker build --tag kuro-bot:latest .
+version=$(cat setup.py | grep 'version' | cut -d = -f 2)
+version=${version:1:-2}
+docker build --tag kuro-bot:$version .
 
 echo "Starting Kuro Bot Service"
 docker service create \
@@ -18,4 +20,4 @@ docker service create \
 --env SETTINGS_PATH=/run/secrets/kuro-bot-secret \
 --env LOGGING_PATH=/etc/kuro-bot/kuro-logging.conf \
 --mount type=bind,source=$KURO_PATH_DATA/data,destination=/kuro-bot/data \
-kuro-bot:latest
+kuro-bot:$version
