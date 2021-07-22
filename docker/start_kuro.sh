@@ -14,8 +14,8 @@ echo "Starting Kuro Bot Service"
 docker service create \
 --name kuro-bot \
 --secret kuro-bot-secret \
---config kuro-bot-logs \
+--config source=kuro-bot-logs,target=/etc/kuro-bot/kuro-logging.conf,mode=0775 \
 --env SETTINGS_PATH=/run/secrets/kuro-bot-secret \
---env LOGGING_PATH=/kuro-bot-logs \
+--env LOGGING_PATH=/etc/kuro-bot/kuro-logging.conf \
 --mount type=bind,source=$KURO_PATH_DATA/data,destination=/kuro-bot/data \
 kuro-bot:latest
