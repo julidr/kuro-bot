@@ -15,7 +15,6 @@ from utils.date_utils import get_days_diff
 from utils.discord_utils import get_discord_color
 
 LOG_ID = "EventCommand"
-logging.basicConfig(level=logging.INFO)
 
 RELIVE_RGB = (234, 1, 36)
 
@@ -82,36 +81,27 @@ class EventCommand(commands.Cog):
         """
         logging.info('[{0}] - Reviewing today events'.format(LOG_ID))
 
+        self.event_repository.reload_events()
+
         events_about_to_end = []
+        events_about_to_start = []
         current_events = self.event_repository.get_current_events()
 
         for current_event in current_events:
             events_about_to_end += get_events_about_to_end(current_events[current_event])
+        for current_event in current_events:
+            events_about_to_start += get_events_about_to_start(current_events[current_event])
 
         events_about_to_end_count = len(events_about_to_end)
+        events_about_to_start_count = len(events_about_to_start)
 
         if events_about_to_end_count > 0:
             logging.info('[{0}] - Found {1} Events About to End'.format(LOG_ID, events_about_to_end_count))
+            await self.__send_info_events_reminder(events_about_to_end, is_ending=True)
 
-            self.event_repository.reload_events()
-            self.server_repository.reload_servers()
-
-            events_about_to_end = self.__get_complete_event_data(events_about_to_end)
-            super_event = events_about_to_end[0]
-
-            for guild in self.bot.guilds:
-                server = self.server_repository.find_server_by_id(guild.id)
-                if server is None:
-                    logging.warning('[{0}] - Missing configuration for server [{1}]'.format(LOG_ID, guild.name))
-                else:
-                    if server.event_channel is not None:
-                        channel = self.bot.get_channel(server.event_channel.channel_id)
-                        embed = build_event_reminder_end_embed(super_event, events_about_to_end,
-                                                               server.event_channel.announcement_rol)
-                        await channel.send(embed=embed)
-                    else:
-                        logging.warning('[{0}] - Missing configuration for event channel '
-                                        'in server [{1}]'.format(LOG_ID, guild.name))
+        if events_about_to_start_count > 0:
+            logging.info('[{0}] - Found {1} Events About to Start'.format(LOG_ID, events_about_to_start_count))
+            await self.__send_info_events_reminder(events_about_to_start, is_ending=False)
 
     @events_reminder.before_loop
     async def before_events_reminder(self):
@@ -120,9 +110,31 @@ class EventCommand(commands.Cog):
 
         :return: None
         """
-        logging.info('[{0}] - Waiting to start events reminders...'.format(LOG_ID))
+        logging.debug('[{0}] - Waiting to start events reminders...'.format(LOG_ID))
         await self.bot.wait_until_ready()
-        logging.info('[{0}] - Events reminders ready!'.format(LOG_ID))
+        logging.debug('[{0}] - Events reminders ready!'.format(LOG_ID))
+
+    async def __send_info_events_reminder(self, events_about_to_remind: list, is_ending: bool):
+
+        self.server_repository.reload_servers()
+
+        events_about_to_remind = self.__get_complete_event_data(events_about_to_remind)
+        super_event = events_about_to_remind[0]
+
+        for guild in self.bot.guilds:
+            server = self.server_repository.find_server_by_id(guild.id)
+            if server is None:
+                logging.warning('[{0}] - Missing configuration for server [{1}]'.format(LOG_ID, guild.name))
+            else:
+                if server.event_channel is not None:
+                    channel = self.bot.get_channel(server.event_channel.channel_id)
+
+                    embed = build_event_reminder_embed(super_event, events_about_to_remind,
+                                                       server.event_channel.announcement_rol, is_ending)
+                    await channel.send(embed=embed)
+                else:
+                    logging.warning('[{0}] - Missing configuration for event channel '
+                                    'in server [{1}]'.format(LOG_ID, guild.name))
 
     def __get_complete_event_data(self, events: list) -> list:
         """
@@ -159,25 +171,44 @@ def get_events_about_to_end(current_events: list) -> list:
     :return: A list with events that are about to end
     """
     today = datetime.now()
-    return [current_event for current_event in current_events if get_days_diff(today, current_event.end_date) == 1]
+    return [current_event for current_event in current_events if get_days_diff(today, current_event.end_date) == -1]
 
 
-def build_event_reminder_end_embed(super_event: Event, events_about_to_end: list, server_rol: int) -> discord.Embed:
+def get_events_about_to_start(current_events: list) -> list:
+    """
+    For a given list, search for the events that start in 1 days and return them.
+
+    :param current_events: List of Events to validate its start date
+    :return: A list with events that are about to start
+    """
+    today = datetime.now()
+    events_with_start_date = [current_event for current_event in current_events if current_event.start_date is not None]
+    return [event for event in events_with_start_date if get_days_diff(today, event.start_date) == -1]
+
+
+def build_event_reminder_embed(super_event: Event, events_about_to_remind: list, server_rol: int,
+                               is_ending: bool) -> discord.Embed:
     """
     Build the event reminder message with the respective format and given information.
 
     :param super_event: Event that is going to be show with more details than others
-    :param events_about_to_end: List with all events that are about to finish
+    :param events_about_to_remind: List with all events that are about to finish
     :param server_rol: The rol that will be use to announce the event
+    :param is_ending: Variable that indicates if an event is starting or ending
     :return: Discord Embed with the defined format to use
     """
     star_emoji = ':star:'
-    title = '{0} is About to End!!'.format(super_event.name)
-    description = '<@&{0}> The following events end in one day!! ' \
-                  'Hurry to finish them - Pour moi :heart:'.format(server_rol)
+    end_or_start = 'End' if is_ending else 'Start'
+    encourage_message = 'Hurry to finish them' if is_ending else 'Get ready for them'
+    title = '{0} is About to {1}!!'.format(super_event.name, end_or_start)
+    description = '<@&{0}> The following events {1} in one day!! ' \
+                  '{2} - Pour moi :heart:'.format(server_rol, end_or_start.lower(), encourage_message)
     embed = discord.Embed(title=title, description=description, color=get_discord_color(RELIVE_RGB))
 
-    embed.add_field(name='End Date', value=super_event.end_date, inline=False)
+    date_field_name = '{0} Date'.format(end_or_start)
+    date_field_value = super_event.end_date if is_ending else super_event.start_date
+
+    embed.add_field(name=date_field_name, value=date_field_value, inline=False)
     embed.add_field(name='Name', value=super_event.name, inline=True)
     embed.set_image(url=super_event.icon)
 
@@ -186,18 +217,19 @@ def build_event_reminder_end_embed(super_event: Event, events_about_to_end: list
     if isinstance(super_event, Boss):
         embed.add_field(name='Life', value='{}%'.format(super_event.hp_percentage), inline=True)
 
-    events_about_to_end_count = len(events_about_to_end)
+    events_about_to_remind_count = len(events_about_to_remind)
 
-    if events_about_to_end_count > 1:
+    if events_about_to_remind_count > 1:
 
         additional_events_message = ''
         additional_events_message_format = '{0} {1} \n'
         bullets_emoji = ':white_small_square:'
 
-        for additional_events in events_about_to_end[1::]:
+        for additional_events in events_about_to_remind[1::]:
             additional_events_message += additional_events_message_format.format(bullets_emoji,
                                                                                  additional_events.name)
-        embed.add_field(name="Additional Events that Ends", value=additional_events_message, inline=False)
+        additional_field_name = 'Additional Events that {0}'.format('Ends' if is_ending else 'Start')
+        embed.add_field(name=additional_field_name, value=additional_events_message, inline=False)
 
     return embed
 

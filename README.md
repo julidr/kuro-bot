@@ -3,8 +3,8 @@
 [![kuroversion](https://img.shields.io/badge/version-1.0.0-fe9952)]()
 [![python](https://img.shields.io/badge/python-3.7-376fa0)](https://www.python.org/)
 [![karthuria](https://img.shields.io/badge/Karthuria-API-fb5457)](https://karth.top/home)
-[![status](https://img.shields.io/badge/status-offline-red)](https://www.python.org/)
-[![license](https://img.shields.io/badge/license-No%20license-blue)](https://www.python.org/)
+[![status](https://img.shields.io/badge/status-online-green)]()
+[![license](https://img.shields.io/badge/license-No%20license-blue)]()
 [![coverage](coverage.svg)]()
 
 **Discord Bot** - Share basic information about Shoujo☆Kageki Revue Starlight franchise.
@@ -54,8 +54,8 @@ This bot has the following automatic tasks that will be executed in any server.
   and rol. <br>
   If no channel was configured then it won't send them and if no role was configured it will use `@everyone`.
 
-- **events reminders**: If an event is about to end in one day will send a notification to a preconfigured channel and
-  rol. <br>
+- **events reminders**: If an event is about to end or start in one day will send a notification to a preconfigured
+  channel and rol. <br>
   If no channel was configured then it won't send them and if no role was configured it will use `@everyone`.
 
 ## License ##

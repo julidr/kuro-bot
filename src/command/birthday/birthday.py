@@ -13,7 +13,6 @@ from utils.date_utils import convert_date_to_str
 from utils.discord_utils import get_discord_color
 
 LOG_ID = "BirthdayCommand"
-logging.basicConfig(level=logging.INFO)
 
 SCHOOL_ICON_URL = "https://api.karen.makoo.eu/api/assets/jp/res/ui/images/chat/icon_school_{0}.png"
 
@@ -93,9 +92,9 @@ class BirthdayCommand(commands.Cog):
 
         :return: None
         """
-        logging.info('[{0}] - Waiting to start birthdays reminders...'.format(LOG_ID))
+        logging.debug('[{0}] - Waiting to start birthdays reminders...'.format(LOG_ID))
         await self.bot.wait_until_ready()
-        logging.info('[{0}] - Birthday reminders ready!'.format(LOG_ID))
+        logging.debug('[{0}] - Birthday reminders ready!'.format(LOG_ID))
 
 
 def build_birthday_reminder_embed(birthday_girl: Character, server_rol: int) -> discord.Embed:

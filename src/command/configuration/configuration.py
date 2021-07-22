@@ -1,5 +1,3 @@
-import logging
-
 from discord import Role
 from discord.abc import GuildChannel
 from discord.ext import commands
@@ -10,7 +8,6 @@ from command.configuration.repository.server_repository import ServerRepository
 from command.initializer import Initializer
 
 LOG_ID = "ConfigurationCommand"
-logging.basicConfig(level=logging.INFO)
 
 
 class ConfigurationCommand(commands.Cog):
