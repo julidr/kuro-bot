@@ -54,8 +54,8 @@ This bot has the following automatic tasks that will be executed in any server.
   and rol. <br>
   If no channel was configured then it won't send them and if no role was configured it will use `@everyone`.
 
-- **events reminders**: If an event is about to end in one day will send a notification to a preconfigured channel and
-  rol. <br>
+- **events reminders**: If an event is about to end or start in one day will send a notification to a preconfigured
+  channel and rol. <br>
   If no channel was configured then it won't send them and if no role was configured it will use `@everyone`.
 
 ## License ##
