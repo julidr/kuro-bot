@@ -187,7 +187,7 @@ class TestGetDaysDiff:
         # Arrange
         first_date = datetime.datetime.now()
         second_date = (datetime.datetime.now()) + datetime.timedelta(days=10)
-        expected_result = 10
+        expected_result = -10
 
         # Act
         result = get_days_diff(first_date, second_date)
