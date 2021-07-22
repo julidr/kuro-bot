@@ -34,4 +34,4 @@ def get_days_diff(first_date: datetime, second_date: datetime) -> int:
     :param second_date: datetime To use for the diff calculations
     :return: The days difference as a positive integer
     """
-    return abs((first_date.date() - second_date.date()).days)
+    return (first_date.date() - second_date.date()).days
