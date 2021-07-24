@@ -73,7 +73,7 @@ class TestGetCharacterBirthday:
         expected_name = 'Claudine Saijo'
 
         # Act
-        response = repository.get_character_birthday('1/8')
+        response = repository.get_character_birthday('01/08')
 
         # Assert
         assert response.name == expected_name
@@ -86,7 +86,7 @@ class TestGetCharacterBirthday:
         repository = CharacterRepository(mock_client)
 
         # Act
-        response = repository.get_character_birthday('1/9')
+        response = repository.get_character_birthday('01/09')
 
         # Assert
         assert response is None
