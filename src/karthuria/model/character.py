@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from karthuria.model.color import Color
 from karthuria.model.school import School
 
@@ -13,7 +15,7 @@ class Character:
     def __init__(self, chara_id, name, birth_day, birth_month, school_id, detailed_info=None):
         self.id = chara_id
         self.name = name
-        self.birthday = '{0}/{1}'.format(birth_day, birth_month)
+        self.birthday = datetime(1, birth_month, birth_day).strftime('%d/%m')
         self.school = School(school_id)
         self.portrait = PORTRAIT_URL.format(self.id)
         self.color = Color(name)
