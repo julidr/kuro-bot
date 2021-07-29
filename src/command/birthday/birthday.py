@@ -79,8 +79,9 @@ class BirthdayCommand(commands.Cog):
                 else:
                     if server.birthday_channel is not None:
                         channel = self.bot.get_channel(server.birthday_channel.channel_id)
+                        rol = guild.get_role(server.birthday_channel.announcement_rol)
                         embed = build_birthday_reminder_embed(birthday_girl, server.birthday_channel.announcement_rol)
-                        await channel.send(embed=embed)
+                        await channel.send(rol.mention, embed=embed)
                     else:
                         logging.warning('[{0}] - Missing configuration for birthday channel '
                                         'in server [{1}]'.format(LOG_ID, guild.name))
