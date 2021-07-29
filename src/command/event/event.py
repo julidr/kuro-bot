@@ -128,10 +128,10 @@ class EventCommand(commands.Cog):
             else:
                 if server.event_channel is not None:
                     channel = self.bot.get_channel(server.event_channel.channel_id)
-
+                    rol = guild.get_role(server.event_channel.announcement_rol)
                     embed = build_event_reminder_embed(super_event, events_about_to_remind,
                                                        server.event_channel.announcement_rol, is_ending)
-                    await channel.send(embed=embed)
+                    await channel.send(rol.mention, embed=embed)
                 else:
                     logging.warning('[{0}] - Missing configuration for event channel '
                                     'in server [{1}]'.format(LOG_ID, guild.name))
