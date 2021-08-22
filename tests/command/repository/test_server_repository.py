@@ -253,3 +253,65 @@ class TestReloadServers:
         assert result[0].name == expected_name
         assert result[0].event_channel is not None
         assert result[0].event_channel.name == expected_event_channel_name
+
+
+class TestRemoveServerChannel:
+
+    @patch('command.configuration.repository.server_repository.is_file')
+    @patch('command.configuration.repository.server_repository.load_json_file')
+    @patch('command.configuration.repository.server_repository.write_json_file')
+    def test_when_birthday_channel_was_removed(self, mock_write_json, mock_load_json, mock_is_file,
+                                               complete_server_info):
+        # Arrange
+        mock_is_file.return_value = True
+        mock_load_json.return_value = complete_server_info
+        mock_write_json.return_value = None
+        repository = ServerRepository(TEST_JSON)
+        expected_server_id = 1
+
+        # Act
+        repository.remove_server_channel(expected_server_id, ChannelType.BIRTHDAY)
+
+        # Assert
+        assert len(repository.servers) != 0
+        assert repository.servers[0].birthday_channel is None
+        assert repository.servers[0].event_channel is not None
+
+    @patch('command.configuration.repository.server_repository.is_file')
+    @patch('command.configuration.repository.server_repository.load_json_file')
+    @patch('command.configuration.repository.server_repository.write_json_file')
+    def test_when_events_channel_was_removed(self, mock_write_json, mock_load_json, mock_is_file, complete_server_info):
+        # Arrange
+        mock_is_file.return_value = True
+        mock_load_json.return_value = complete_server_info
+        mock_write_json.return_value = None
+        repository = ServerRepository(TEST_JSON)
+        expected_server_id = 1
+
+        # Act
+        repository.remove_server_channel(expected_server_id, ChannelType.EVENT)
+
+        # Assert
+        assert len(repository.servers) != 0
+        assert repository.servers[0].birthday_channel is not None
+        assert repository.servers[0].event_channel is None
+
+    @patch('command.configuration.repository.server_repository.is_file')
+    @patch('command.configuration.repository.server_repository.load_json_file')
+    @patch('command.configuration.repository.server_repository.write_json_file')
+    def test_when_some_channel_was_removed_but_server_wasnt_configured(self, mock_write_json, mock_load_json,
+                                                                       mock_is_file, complete_server_info):
+        # Arrange
+        mock_is_file.return_value = True
+        mock_load_json.return_value = complete_server_info
+        mock_write_json.return_value = None
+        repository = ServerRepository(TEST_JSON)
+        expected_server_id = 2
+
+        # Act
+        repository.remove_server_channel(expected_server_id, ChannelType.EVENT)
+
+        # Assert
+        assert len(repository.servers) != 0
+        assert repository.servers[0].birthday_channel is not None
+        assert repository.servers[0].event_channel is not None

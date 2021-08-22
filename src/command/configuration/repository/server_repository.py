@@ -49,6 +49,20 @@ class ServerRepository:
         add_channel(channel)
         self.__save_server(server)
 
+    def remove_server_channel(self, server_id: int, channel_type: ChannelType) -> None:
+        """
+        Remove an specified channel from a channel.
+        :param server_id: The id that identifies the server
+        :param channel_type: Channel type to be remove in the server
+        :return: None
+        """
+        server = self.find_server_by_id(server_id)
+
+        if server is not None:
+            remove_channel = getattr(server, 'remove_{0}'.format(channel_type.value))
+            remove_channel()
+            self.__save_server(server)
+
     def __save_server(self, new_server: Server) -> None:
         """
         Saves into a pre configured json file the information of a server.

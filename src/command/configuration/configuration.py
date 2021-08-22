@@ -45,6 +45,36 @@ class ConfigurationCommand(commands.Cog):
         """
         await self.__configure_announcement(ctx, channel_name, announcement_rol, ChannelType.EVENT)
 
+    @commands.command(pass_context=True)
+    async def remove_announcements(self, ctx: Context, *announcement_types):
+        """
+        Remove configuration for a given type of announcement, either event or birthday.
+        :param ctx: Discord context
+        :param announcement_types: The type of announcement to remove its configuration
+        :return: None
+        """
+        if not ctx.message.author.guild_permissions.administrator:
+            await ctx.send('Désolé, tout utilisateur. Only server admins can use this command.')
+            return
+
+        if len(announcement_types) == 0:
+            await ctx.send("Hmm...Please specify announcement configurations you want to remove")
+            return
+
+        changed_something = False
+        for channel_type in announcement_types:
+            if channel_type.lower() == 'event':
+                changed_something = True
+                self.server_repository.remove_server_channel(ctx.guild.id, ChannelType.EVENT)
+                await ctx.send('Comme tu as insisté...I removed events configurations.')
+            if channel_type.lower() == 'birthday':
+                changed_something = True
+                self.server_repository.remove_server_channel(ctx.guild.id, ChannelType.BIRTHDAY)
+                await ctx.send('Comme tu as insisté...I removed birthday configurations.')
+
+        if not changed_something:
+            await ctx.send("I couldn't find any configuration to remove, dommage :wink:")
+
     async def __configure_announcement(self, ctx: Context, channel_name: str, announcement_rol: str,
                                        channel_type: ChannelType):
         """
