@@ -46,6 +46,16 @@ This bot works either with `!` or `$` prefixes.
 !events_announcements general admins
 ```
 
+- **remove_announcements**: Allow server admins to remove an event or birthday announcements configurations to avoid
+  receiving notifications from Kuro Bot on the pre-configured channels. <br>
+  Please use `event`, `birthday` or both to specify the announcement to remove.
+  
+```
+!remove_announcements event
+!remove_announcements birthday
+!remove_announcements event birthday
+```
+
 ### Tasks ###
 
 This bot has the following automatic tasks that will be executed in any server.

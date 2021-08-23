@@ -2,6 +2,7 @@ from datetime import datetime, timedelta
 from unittest.mock import Mock
 
 import pytest
+from discord import Role, TextChannel, Guild
 from requests import Response, HTTPError
 
 from command.configuration.model.server import Channel, Server
@@ -205,6 +206,22 @@ def server_with_channels():
     event_channel = Channel(2, 'event_channel', 2)
     server = Server(1, 'Test Channel', birthday_channel, event_channel)
     return server
+
+
+@pytest.fixture()
+def discord_role():
+    data = {'id': 1, 'name': 'Test'}
+    test_role = Role(guild='tests guild', state=True, data=data)
+    return test_role
+
+
+@pytest.fixture()
+def discord_channel():
+    data = {'id': 1, 'name': 'Test', 'type': 'Text', 'position': 1}
+    mock_guild = Mock(spec=Guild)
+    mock_guild.id = 1
+    test_channel = TextChannel(guild=mock_guild, state=True, data=data)
+    return test_channel
 
 
 def get_characters_sample_response() -> dict:

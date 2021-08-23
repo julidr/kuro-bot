@@ -28,6 +28,13 @@ class Server:
         """
         self.birthday_channel = birthday_channel
 
+    def remove_birthday_channel(self) -> None:
+        """
+        Remove a Channel from the birthday configuration.
+        :return: None
+        """
+        self.birthday_channel = None
+
     def add_event_channel(self, event_channel: Channel) -> None:
         """
         Add a Channel to event configuration if it wasn't specified before
@@ -35,3 +42,10 @@ class Server:
         :return: None
         """
         self.event_channel = event_channel
+
+    def remove_event_channel(self) -> None:
+        """
+        Remove a Channel from the event configuration.
+        :return: None
+        """
+        self.event_channel = None
