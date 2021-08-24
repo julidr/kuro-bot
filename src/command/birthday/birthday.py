@@ -80,7 +80,7 @@ class BirthdayCommand(commands.Cog):
                     if server.birthday_channel is not None:
                         channel = self.bot.get_channel(server.birthday_channel.channel_id)
                         rol = guild.get_role(server.birthday_channel.announcement_rol)
-                        embed = build_birthday_reminder_embed(birthday_girl, server.birthday_channel.announcement_rol)
+                        embed = build_birthday_reminder_embed(birthday_girl)
                         await channel.send(rol.mention, embed=embed)
                     else:
                         logging.warning('[{0}] - Missing configuration for birthday channel '
@@ -98,18 +98,17 @@ class BirthdayCommand(commands.Cog):
         logging.debug('[{0}] - Birthday reminders ready!'.format(LOG_ID))
 
 
-def build_birthday_reminder_embed(birthday_girl: Character, server_rol: int) -> discord.Embed:
+def build_birthday_reminder_embed(birthday_girl: Character) -> discord.Embed:
     """
     Build the birthday reminder message with the respective format and given information.
 
     :param birthday_girl: The stage girl that is celebrating its birthday
-    :param server_rol: The rol that will be use to announce the birthday
     :return: Discord Embed with the defined format to use
     """
 
     title = 'Bon anniversaire {0}!!'.format(birthday_girl.name)
     pronoun = 'my' if 'Claudine' in birthday_girl.name else birthday_girl.name
-    message = "<@&{0}> Today is {1} birthday!! Let's celebrate it.".format(server_rol, pronoun)
+    message = "Today is {0} birthday!! Let's celebrate it.".format(pronoun)
     rgb = birthday_girl.color.rgb
 
     embed = discord.Embed(title=title, description=message, color=get_discord_color(rgb))
