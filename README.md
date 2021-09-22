@@ -1,6 +1,6 @@
 # Kuro Bot #
 
-[![kuroversion](https://img.shields.io/badge/version-1.1.2-fe9952)]()
+[![kuroversion](https://img.shields.io/badge/version-1.2.0-fe9952)]()
 [![python](https://img.shields.io/badge/python-3.7-376fa0)](https://www.python.org/)
 [![karthuria](https://img.shields.io/badge/Karthuria-API-fb5457)](https://karth.top/home)
 [![status](https://img.shields.io/badge/status-online-green)]()
