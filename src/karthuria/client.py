@@ -2,6 +2,7 @@ import requests
 
 from karthuria.model.character import Character, Dress, Enemy
 from karthuria.model.event import Event, Challenge, Boss
+from karthuria.model.school import School
 
 
 class KarthuriaClient:
@@ -28,11 +29,12 @@ class KarthuriaClient:
         list_of_characters = []
 
         response = requests.get(self.endpoint + path)
+        schools = set(item.value for item in School)
         if response.ok:
             characters_json = response.json()
             for character in characters_json:
                 basic_info = characters_json[character]['basicInfo']
-                if basic_info['birth_day'] != 0:
+                if basic_info['birth_day'] != 0 and basic_info['school_id'] in schools:
                     list_of_characters.append(convert_to_character(basic_info))
 
         return list_of_characters if response.ok else response.raise_for_status()
