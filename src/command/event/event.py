@@ -129,8 +129,7 @@ class EventCommand(commands.Cog):
                 if server.event_channel is not None:
                     channel = self.bot.get_channel(server.event_channel.channel_id)
                     rol = guild.get_role(server.event_channel.announcement_rol)
-                    embed = build_event_reminder_embed(super_event, events_about_to_remind,
-                                                       server.event_channel.announcement_rol, is_ending)
+                    embed = build_event_reminder_embed(super_event, events_about_to_remind, is_ending)
                     await channel.send(rol.mention, embed=embed)
                 else:
                     logging.warning('[{0}] - Missing configuration for event channel '
@@ -186,14 +185,12 @@ def get_events_about_to_start(current_events: list) -> list:
     return [event for event in events_with_start_date if get_days_diff(today, event.start_date) == -1]
 
 
-def build_event_reminder_embed(super_event: Event, events_about_to_remind: list, server_rol: int,
-                               is_ending: bool) -> discord.Embed:
+def build_event_reminder_embed(super_event: Event, events_about_to_remind: list, is_ending: bool) -> discord.Embed:
     """
     Build the event reminder message with the respective format and given information.
 
     :param super_event: Event that is going to be show with more details than others
     :param events_about_to_remind: List with all events that are about to finish
-    :param server_rol: The rol that will be use to announce the event
     :param is_ending: Variable that indicates if an event is starting or ending
     :return: Discord Embed with the defined format to use
     """
@@ -201,8 +198,8 @@ def build_event_reminder_embed(super_event: Event, events_about_to_remind: list,
     end_or_start = 'End' if is_ending else 'Start'
     encourage_message = 'Hurry to finish them' if is_ending else 'Get ready for them'
     title = '{0} is About to {1}!!'.format(super_event.name, end_or_start)
-    description = '<@&{0}> The following events {1} in one day!! ' \
-                  '{2} - Pour moi :heart:'.format(server_rol, end_or_start.lower(), encourage_message)
+    description = 'The following events {0} in one day!! ' \
+                  '{1} - Pour moi :heart:'.format(end_or_start.lower(), encourage_message)
     embed = discord.Embed(title=title, description=description, color=get_discord_color(RELIVE_RGB))
 
     date_field_name = '{0} Date'.format(end_or_start)
