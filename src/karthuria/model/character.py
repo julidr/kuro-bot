@@ -3,7 +3,7 @@ from datetime import datetime
 from karthuria.model.color import Color
 from karthuria.model.school import School
 
-PORTRAIT_URL = 'https://cdn.starira.xyz/api/assets/jp/res/ui/images/archive/archive_chara/select/chara_portrait_{0}.png'
+PORTRAIT_URL = 'https://cdn.karth.top/api/assets/jp/res/ui/images/archive/archive_chara/select/chara_portrait_{0}.png'
 
 
 class Character:
