@@ -33,6 +33,11 @@ class Color(Enum):
     KOHARU = 'Koharu Yanagi', (212, 49, 78)
     SUZU = 'Suzu Minase', (34, 151, 115)
     HISAME = 'Hisame Honami', (221, 211, 97)
+    STELLA = 'Stella Takachiho', (94, 195, 207)
+    SHIRO = 'Shiro Ogami', (220, 239, 243)
+    RYOKO = 'Ryoko Kobato', (255, 232, 118)
+    MINKU = 'Minku Umibe', (233, 61, 119)
+    KUINA = 'Kuina Moriyasu', (59, 168, 61)
 
     def __new__(cls, *args, **kwargs):
         obj = object.__new__(cls)
