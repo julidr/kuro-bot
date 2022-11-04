@@ -72,6 +72,46 @@ class KarthuriaClient:
 
         return convert_to_dress(basic_info) if response.ok else response.raise_for_status()
 
+    def get_dresses_ids_by_character(self, character_id: int) -> list:
+        """
+        Retrieves all dresses ids for a given character
+
+        :param character_id: the identifier of the character to search they dresses
+        :return: A list with the found dresses ids
+        """
+        path = '/dress.json'
+        list_of_dresses = []
+        response = requests.get(self.endpoint + path)
+
+        if response.ok:
+            dresses_json = response.json()
+            for dress in dresses_json:
+                basic_info = dresses_json[dress]['basicInfo']
+                if basic_info['character'] == character_id:
+                    list_of_dresses.append(dress)
+
+        return list_of_dresses if response.ok else response.raise_for_status()
+
+    def get_equips_ids_by_character(self, character_id: int) -> list:
+        """
+        Retrieves all equips ids for a given character
+
+        :param character_id: the identifier of the character to search they equips
+        :return: A list with the found equips ids
+        """
+        path = '/equip.json'
+        list_of_equips = []
+        response = requests.get(self.endpoint + path)
+
+        if response.ok:
+            equips_json = response.json()
+            for equip in equips_json:
+                basic_info = equips_json[equip]['basicInfo']
+                if basic_info['charas'] != 'None' and character_id in basic_info['charas']:
+                    list_of_equips.append(equip)
+
+        return list_of_equips if response.ok else response.raise_for_status()
+
     def get_enemy(self, enemy_id: int) -> Enemy:
         """
         Retrieve detailed information of one enemy based on if its given id
