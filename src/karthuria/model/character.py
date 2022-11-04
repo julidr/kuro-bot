@@ -30,10 +30,21 @@ class Dress:
     Model class of Dress with the basic information that can be retrieved from the Karthuria API
     """
 
-    def __init__(self, dress_id: int, name: str, rarity: int):
+    def __init__(self, dress_id: int, name: str, rarity: int, character: int):
         self.dress_id = dress_id
         self.name = name
         self.rarity = rarity
+        self.character = character
+
+
+class Equip:
+    """
+    Model class of Equip with the basic information that can be retrieved from the Karthuria API
+    """
+
+    def __init__(self, equip_id: int, characters: list):
+        self.equip_id = equip_id
+        self.characters = characters
 
 
 class Enemy:
