@@ -23,7 +23,7 @@ def character():
 
 @pytest.fixture
 def dress():
-    return Dress(1, 'Dress Test', 5)
+    return Dress(1, 'Dress Test', 5, 104)
 
 
 @pytest.fixture
