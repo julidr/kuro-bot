@@ -6,7 +6,7 @@ from discord import Role, TextChannel, Guild
 from requests import Response, HTTPError
 
 from command.configuration.model.server import Channel, Server
-from karthuria.model.character import Character, Dress, Enemy
+from karthuria.model.character import Character, Dress, Enemy, Equip
 from karthuria.model.event import Event, Challenge, Boss
 
 
@@ -24,6 +24,11 @@ def character():
 @pytest.fixture
 def dress():
     return Dress(1, 'Dress Test', 5, 104)
+
+
+@pytest.fixture
+def equip():
+    return Equip(1, [104])
 
 
 @pytest.fixture
