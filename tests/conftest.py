@@ -6,7 +6,7 @@ from discord import Role, TextChannel, Guild
 from requests import Response, HTTPError
 
 from command.configuration.model.server import Channel, Server
-from karthuria.model.character import Character, Dress, Enemy
+from karthuria.model.character import Character, Dress, Enemy, Equip
 from karthuria.model.event import Event, Challenge, Boss
 
 
@@ -23,7 +23,12 @@ def character():
 
 @pytest.fixture
 def dress():
-    return Dress(1, 'Dress Test', 5)
+    return Dress(1, 'Dress Test', 5, 104)
+
+
+@pytest.fixture
+def equip():
+    return Equip(1, [104])
 
 
 @pytest.fixture
@@ -105,6 +110,34 @@ def ok_dress_response():
     response = Mock(spec=Response)
     response.ok = True
     response.json.return_value = get_dress_sample_response()
+
+    return response
+
+
+@pytest.fixture(scope='module')
+def ok_dresses_response():
+    """
+    Fixture to return a correct response of the endpoint dress.json in Karthuria API
+
+    :return: A Response Mock of the requests library, with its respective ok value and two dresses information
+    """
+    response = Mock(spec=Response)
+    response.ok = True
+    response.json.return_value = get_dresses_sample_response()
+
+    return response
+
+
+@pytest.fixture(scope='module')
+def ok_equips_response():
+    """
+    Fixture to return a correct response of the endpoint equip.json in Karthuria API
+
+    :return: A Response Mock of the requests library, with its respective ok value and two equips information
+    """
+    response = Mock(spec=Response)
+    response.ok = True
+    response.json.return_value = get_equips_sample_response()
 
     return response
 
@@ -311,6 +344,228 @@ def get_dress_sample_response():
                 "en": "Tristan"
             }
         }
+    }
+
+
+def get_dresses_sample_response():
+    """
+    Sample response of the call to Karthuria API dress.json
+
+    :return: A list with two samples of response of the API with the found dresses
+    """
+    return {
+        "1010001": {
+            "basicInfo": {
+                "cardID": "1010001",
+                "rarity": 2,
+                "character": 101,
+                "name": {
+                    "ja": "聖翔音楽学園",
+                    "en": "Seisho Music Academy",
+                    "ko": "세이쇼 음악학교",
+                    "zh_hant": "聖翔音樂學院"
+                },
+                "released": {
+                    "ww": 1540105200,
+                    "ja": 1540105200
+                }
+            },
+            "base": {
+                "attribute": 1,
+                "attackType": 1,
+                "roleIndex": {
+                    "role": "front",
+                    "index": 11048
+                },
+                "skills": [
+                    1,
+                    89,
+                    30,
+                    11,
+                    12
+                ],
+                "unitSkill": 0,
+                "entrySkill": 0,
+                "remake": False
+            },
+            "stat": {
+                "total": 4782,
+                "agi": 904,
+                "atk": 832,
+                "hp": 22582,
+                "mdef": 835,
+                "pdef": 860
+            },
+            "statRemake": False
+        },
+        "1010002": {
+            "basicInfo": {
+                "cardID": "1010002",
+                "rarity": 3,
+                "character": 101,
+                "name": {
+                    "ja": "太陽の国の騎士",
+                    "en": "Knight of the Sun Nation",
+                    "ko": "태양 나라의 기사",
+                    "zh_hant": "太陽之國騎士"
+                },
+                "released": {
+                    "ww": 1540105200,
+                    "ja": 1540105200
+                }
+            },
+            "base": {
+                "attribute": 5,
+                "attackType": 1,
+                "roleIndex": {
+                    "role": "front",
+                    "index": 12048
+                },
+                "skills": [
+                    1,
+                    89,
+                    20,
+                    1,
+                    17
+                ],
+                "unitSkill": 169,
+                "entrySkill": 0,
+                "remake": False
+            },
+            "stat": {
+                "total": 5388,
+                "agi": 1239,
+                "atk": 1342,
+                "hp": 19048,
+                "mdef": 1007,
+                "pdef": 639
+            },
+            "statRemake": False
+        }
+    }
+
+
+def get_equips_sample_response():
+    """
+    Sample response of the call to Karthuria API equip.json
+
+    :return: A dict with two samples of response of the API with the found equips
+    """
+    return {
+        "2000021": {
+            "basicInfo": {
+                "cardID": "2000021",
+                "rarity": 2,
+                "charas": [
+                    104
+                ],
+                "name": {
+                    "ja": "Oui！",
+                    "en": "Oui!",
+                    "ko": "Oui!",
+                    "zh_hant": "Oui（是的）！"
+                },
+                "profile": {
+                    "ja": "――『少女☆歌劇 レヴュースタァライト 第１０話』より",
+                    "en": "- From \"Revue Starlight\" Episode 10",
+                    "ko": "――[소녀☆가극 레뷰 스타라이트 제10화]로부터",
+                    "zh_hant": "──取自『少女☆歌劇 Revue Starlight 第10話』"
+                },
+                "released": {
+                    "ww": 1540105200,
+                    "ja": 1540105200
+                }
+            },
+            "skill": {
+                "id": 10018,
+                "icon": 39,
+                "type": {
+                    "ja": "永続",
+                    "en": "Passive",
+                    "ko": "영구",
+                    "zh_hant": "永續"
+                },
+                "params": [
+                    {
+                        "icon": 39,
+                        "type": "normal",
+                        "hits": None,
+                        "duration": None,
+                        "accuracy": None,
+                        "target": {
+                            "ja": "自身",
+                            "en": "Self",
+                            "ko": "자신",
+                            "zh_hant": "自己"
+                        },
+                        "description": {
+                            "ja": "有利属性ダメージアップ([6, 6, 7, 8, 9])",
+                            "en": "Effective Element Dmg Up ([6, 6, 7, 8, 9])",
+                            "ko": "유리한 속성 대미지 증가([6, 6, 7, 8, 9])",
+                            "zh_hant": "提升有利屬性傷害（[6, 6, 7, 8, 9]）"
+                        },
+                        "descriptionExtra": None
+                    }
+                ]
+            },
+            "activeSkill": 0
+        },
+        "2000022": {
+            "basicInfo": {
+                "cardID": "2000022",
+                "rarity": 2,
+                "charas": "None",
+                "name": {
+                    "ja": "あの娘を捜して",
+                    "en": "Searching for Her",
+                    "ko": "그 아이를 찾아서",
+                    "zh_hant": "找出那個女孩"
+                },
+                "profile": {
+                    "ja": "――『少女☆歌劇 レヴュースタァライト 第１１話』より",
+                    "en": "- From \"Revue Starlight\" Episode 11",
+                    "ko": "――[소녀☆가극 레뷰 스타라이트 제11화]로부터",
+                    "zh_hant": "──取自『少女☆歌劇 Revue Starlight 第11話』"
+                },
+                "released": {
+                    "ww": 1540105200,
+                    "ja": 1540105200
+                }
+            },
+            "skill": {
+                "id": 20004,
+                "icon": 89,
+                "type": {
+                    "ja": "開幕時",
+                    "en": "At Start",
+                    "ko": "개막",
+                    "zh_hant": "開幕時"
+                },
+                "params": [
+                    {
+                        "icon": 89,
+                        "type": "normal",
+                        "hits": None,
+                        "duration": None,
+                        "accuracy": 100,
+                        "target": {
+                            "ja": "自身",
+                            "en": "Self",
+                            "ko": "자신",
+                            "zh_hant": "自己"
+                        },
+                        "description": {
+                            "ja": "キラめき回復([16, 18, 20, 22, 24])",
+                            "en": "Brilliance Recovery ([16, 18, 20, 22, 24])",
+                            "ko": "반짝임 회복([16, 18, 20, 22, 24])",
+                            "zh_hant": "回復光芒（[16, 18, 20, 22, 24]）"
+                        },
+                        "descriptionExtra": None
+                    }
+                ]
+            },
+            "activeSkill": 0
+        },
     }
 
 

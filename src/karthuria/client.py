@@ -1,6 +1,6 @@
 import requests
 
-from karthuria.model.character import Character, Dress, Enemy
+from karthuria.model.character import Character, Dress, Enemy, Equip
 from karthuria.model.event import Event, Challenge, Boss
 from karthuria.model.school import School
 
@@ -71,6 +71,42 @@ class KarthuriaClient:
             basic_info = dress_json['basicInfo']
 
         return convert_to_dress(basic_info) if response.ok else response.raise_for_status()
+
+    def get_dresses(self) -> list:
+        """
+        Get all existing dresses information.
+
+        :return: A list with the found dresses
+        """
+        path = '/dress.json'
+        list_of_dresses = []
+        response = requests.get(self.endpoint + path)
+
+        if response.ok:
+            dresses_json = response.json()
+            for dress in dresses_json:
+                basic_info = dresses_json[dress]['basicInfo']
+                list_of_dresses.append(convert_to_dress(basic_info))
+
+        return list_of_dresses if response.ok else response.raise_for_status()
+
+    def get_equips(self) -> Equip:
+        """
+        Get all existing equips information.
+
+        :return: A list with the found equips.
+        """
+        path = '/equip.json'
+        list_of_equips = []
+        response = requests.get(self.endpoint + path)
+
+        if response.ok:
+            equips_json = response.json()
+            for equip in equips_json:
+                basic_info = equips_json[equip]['basicInfo']
+                list_of_equips.append(convert_to_equip(basic_info))
+
+        return list_of_equips if response.ok else response.raise_for_status()
 
     def get_enemy(self, enemy_id: int) -> Enemy:
         """
@@ -164,11 +200,27 @@ def convert_to_dress(basic_info: dict) -> Dress:
     :return: A new instance of the Dress model with the given information
     """
     name = basic_info['name']['en'] if 'en' in basic_info['name'] else basic_info['name']['ja']
-    dress = Dress(basic_info['cardID'],
+    dress = Dress(int(basic_info['cardID']),
                   name,
-                  basic_info['rarity'])
+                  basic_info['rarity'],
+                  basic_info['character'])
 
     return dress
+
+
+def convert_to_equip(basic_info: dict) -> Equip:
+    """
+    Transform a dictionary with the 'basicInfo' information returned by Karthuria API
+    into an Equip object
+
+    :param basic_info: Information retrieved from the 'basicInfo' response
+    :return: A new instance of the Equip model with the given information
+    """
+    characters = basic_info['charas'] if basic_info['charas'] != 'None' else None
+    equip = Equip(basic_info['cardID'],
+                  characters)
+
+    return equip
 
 
 def convert_to_enemy(basic_info: dict) -> Enemy:

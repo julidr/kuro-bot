@@ -104,6 +104,66 @@ class TestGetDress:
         assert str(exception.value) == expected_error_message
 
 
+class TestGetDresses:
+
+    def test_when_response_is_successful(self, ok_dresses_response):
+        # Arrange
+        expected_id = 1010002
+
+        # Act
+        with patch.object(requests, 'get', return_value=ok_dresses_response) as requests_mock:
+            response = client.get_dresses()
+
+        # Assert
+        requests_mock.assert_called()
+        assert len(response) == 2
+        assert response[1].dress_id == expected_id
+
+    def test_when_response_is_no_successful(self, bad_response):
+        # Arrange
+        expected_error_message = 'Ups'
+
+        # Act
+        with patch.object(requests, 'get', return_value=bad_response) as requests_mock:
+            with pytest.raises(HTTPError) as exception:
+                client.get_dresses()
+
+        # Assert
+        requests_mock.assert_called()
+        assert str(exception.value) == expected_error_message
+
+
+class TestGetEquips:
+
+    def test_when_response_is_successful(self, ok_equips_response):
+        # Arrange
+        expected_id = '2000021'
+
+        # Act
+        with patch.object(requests, 'get', return_value=ok_equips_response) as requests_mock:
+            response = client.get_equips()
+
+        # Assert
+        requests_mock.assert_called()
+        assert len(response) == 2
+        assert response[0].equip_id == expected_id
+        assert len(response[0].characters) == 1
+        assert response[1].characters is None
+
+    def test_when_response_is_no_successful(self, bad_response):
+        # Arrange
+        expected_error_message = 'Ups'
+
+        # Act
+        with patch.object(requests, 'get', return_value=bad_response) as requests_mock:
+            with pytest.raises(HTTPError) as exception:
+                client.get_equips()
+
+        # Assert
+        requests_mock.assert_called()
+        assert str(exception.value) == expected_error_message
+
+
 class TestGetEnemy:
 
     def test_when_response_is_successful(self, ok_enemy_response):
