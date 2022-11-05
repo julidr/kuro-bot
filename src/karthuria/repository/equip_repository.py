@@ -24,7 +24,8 @@ class EquipRepository:
         :param character_id: The character id to get its equips
         :return: The different Equips instances found for the given id
         """
-        result = [equip for equip in self.equips if character_id in equip.characters]
+        result = [equip for equip in self.equips if
+                  (equip.characters is not None and character_id in equip.characters)]
         if len(result) > 0:
             return result
 
