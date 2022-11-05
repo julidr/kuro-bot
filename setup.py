@@ -9,7 +9,7 @@ packages = [
 
 setuptools.setup(
     name='kuro-bot',
-    version='1.3.0-RC',
+    version='1.3.0',
     packages=packages,
     author='Juliana Diaz',
     description='Basic informational Bot of Shoujo Kageki Revue Starlight franchise',
