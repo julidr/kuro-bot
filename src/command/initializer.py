@@ -5,6 +5,7 @@ from karthuria.client import KarthuriaClient
 from karthuria.repository.character_repository import CharacterRepository
 from karthuria.repository.dress_repository import DressRepository
 from karthuria.repository.enemy_repository import EnemyRepository
+from karthuria.repository.equip_repository import EquipRepository
 from karthuria.repository.event_repository import EventRepository
 from utils.file_utils import load_json_file
 
@@ -36,6 +37,7 @@ class Initializer(metaclass=Singleton):
         self.event_repository = EventRepository(self.karthuria_client)
         self.dress_repository = DressRepository(self.karthuria_client)
         self.enemy_repository = EnemyRepository(self.karthuria_client)
+        self.equip_repository = EquipRepository(self.karthuria_client)
 
     def get_karthuria_client(self) -> KarthuriaClient:
         """
@@ -78,3 +80,10 @@ class Initializer(metaclass=Singleton):
         :return: An instance of the Event Repository
         """
         return self.enemy_repository
+
+    def get_equip_repository(self) -> EquipRepository:
+        """
+        Based on the class initialization return the specific equip repository that was configured.
+        :return: An instance of the Equip Repository
+        """
+        return self.equip_repository

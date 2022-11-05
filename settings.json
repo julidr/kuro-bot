@@ -4,7 +4,8 @@
   "commands": [
     "command.birthday.birthday",
     "command.configuration.configuration",
-    "command.event.event"
+    "command.event.event",
+    "command.love.love"
   ],
   "karthuria_api_url": "https://karth.top/api",
   "servers_path": "servers.json"
