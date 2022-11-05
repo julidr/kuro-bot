@@ -49,11 +49,19 @@ This bot works either with `!` or `$` prefixes.
 - **remove_announcements**: Allow server admins to remove an event or birthday announcements configurations to avoid
   receiving notifications from Kuro Bot on the pre-configured channels. <br>
   Please use `event`, `birthday` or both to specify the announcement to remove.
-  
+
 ```
 !remove_announcements event
 !remove_announcements birthday
 !remove_announcements event birthday
+```
+
+- **i_love_you**: Is possible to say I love you to Kuro Bot, but there will be a really low chance of she saying it
+  back. If you are not lucky then you will receive a picture of her as consolation but if you are lucky then she will
+  mention you.
+
+```
+!i_love_you
 ```
 
 ### Tasks ###
