@@ -14,7 +14,7 @@ from utils.discord_utils import get_discord_color
 
 LOG_ID = "BirthdayCommand"
 
-SCHOOL_ICON_URL = 'https://cdn.starira.xyz/api/assets/jp/res/ui/images/chat/icon_school_{0}.png'
+SCHOOL_ICON_URL = 'https://cdn.karth.top/api/assets/jp/res/ui/images/chat/icon_school_{0}.png'
 
 
 class BirthdayCommand(commands.Cog):
