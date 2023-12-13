@@ -18,7 +18,7 @@ def character():
         'likes': {'en': 'Film/theater, training'},
         'dislikes': {'en': 'Scary stories (esp. Japanese horror films)'},
     }
-    return Character(104, 'Claudine Saijo', 1, 8, 1, detailed_info)
+    return Character(104, 'Claudine Saijo', 1, 8, 1, detailed_info=detailed_info)
 
 
 @pytest.fixture

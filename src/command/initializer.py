@@ -31,7 +31,8 @@ class Initializer(metaclass=Singleton):
 
     def __init__(self):
         self.settings = load_json_file(os.getenv('SETTINGS_PATH', 'settings.json'))
-        self.karthuria_client = KarthuriaClient(self.settings.get('karthuria_api_url'))
+        self.karthuria_client = KarthuriaClient(self.settings.get('karthuria_api_url'),
+                                                self.settings.get("karthuria_cdn_url"))
         self.character_repository = CharacterRepository(self.karthuria_client)
         self.server_repository = ServerRepository(self.settings.get('servers_path'))
         self.event_repository = EventRepository(self.karthuria_client)
@@ -87,3 +88,10 @@ class Initializer(metaclass=Singleton):
         :return: An instance of the Equip Repository
         """
         return self.equip_repository
+
+    def get_cdn_url(self) -> str:
+        """
+        Based on the settings file returns the cdn url that was configured
+        :return A string value
+        """
+        return self.settings.get("karthuria_cdn_url")

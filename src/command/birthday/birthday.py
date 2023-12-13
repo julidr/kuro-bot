@@ -14,20 +14,19 @@ from utils.discord_utils import get_discord_color
 
 LOG_ID = "BirthdayCommand"
 
-SCHOOL_ICON_URL = 'https://cdn.starira.xyz/api/assets/jp/res/ui/images/chat/icon_school_{0}.png'
-
 
 class BirthdayCommand(commands.Cog):
     """
     All Kuro bot discord commands that are related to birthdays. Either to get birthday information or to notify them
     """
 
-    def __init__(self, character_repository: CharacterRepository, server_repository: ServerRepository,
+    def __init__(self, character_repository: CharacterRepository, server_repository: ServerRepository, cdn_url: str,
                  my_bot=commands.Bot):
         self.bot = my_bot
         self.character_repository = character_repository
         self.server_repository = server_repository
         self.birthday_reminder.start()
+        self.school_icon_url = '{0}/{1}'.format(cdn_url, 'res/ui/images/chat/icon_school_{0}.png')
 
     @commands.command(pass_context=True)
     async def birthday(self, ctx: Context, name: str = None) -> None:
@@ -80,7 +79,7 @@ class BirthdayCommand(commands.Cog):
                     if server.birthday_channel is not None:
                         channel = self.bot.get_channel(server.birthday_channel.channel_id)
                         rol = guild.get_role(server.birthday_channel.announcement_rol)
-                        embed = build_birthday_reminder_embed(birthday_girl)
+                        embed = build_birthday_reminder_embed(birthday_girl, self.school_icon_url)
                         await channel.send(rol.mention, embed=embed)
                     else:
                         logging.warning('[{0}] - Missing configuration for birthday channel '
@@ -98,11 +97,12 @@ class BirthdayCommand(commands.Cog):
         logging.debug('[{0}] - Birthday reminders ready!'.format(LOG_ID))
 
 
-def build_birthday_reminder_embed(birthday_girl: Character) -> discord.Embed:
+def build_birthday_reminder_embed(birthday_girl: Character, school_icon_url: str) -> discord.Embed:
     """
     Build the birthday reminder message with the respective format and given information.
 
     :param birthday_girl: The stage girl that is celebrating its birthday
+    :param school_icon_url: The url of the school shield
     :return: Discord Embed with the defined format to use
     """
 
@@ -113,7 +113,7 @@ def build_birthday_reminder_embed(birthday_girl: Character) -> discord.Embed:
 
     embed = discord.Embed(title=title, description=message, color=get_discord_color(rgb))
     embed.set_thumbnail(url=birthday_girl.portrait)
-    embed.set_image(url=SCHOOL_ICON_URL.format(birthday_girl.school))
+    embed.set_image(url=school_icon_url.format(birthday_girl.school))
     embed.add_field(name='Description', value=birthday_girl.description, inline=False)
     embed.add_field(name='Birthday', value=convert_date_to_str(birthday_girl.birthday), inline=False)
     embed.add_field(name='Voice Actor', value=birthday_girl.seiyuu, inline=False)
@@ -150,4 +150,5 @@ def setup(my_bot: commands.Bot) -> None:
     initializer = Initializer()
     my_bot.add_cog(BirthdayCommand(initializer.get_character_repository(),
                                    initializer.get_servers_repository(),
+                                   initializer.get_cdn_url(),
                                    my_bot))

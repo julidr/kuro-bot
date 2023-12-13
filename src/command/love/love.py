@@ -13,9 +13,6 @@ from utils.discord_utils import get_discord_color
 
 LOG_ID = "LoveCommand"
 
-DRESS_URL = 'https://cdn.karth.top/api/assets/dlc/res/dress/cg/{0}/image.png'
-EQUIP_URL = 'https://cdn.karth.top/api/assets/dlc/res/equip/cg/{0}/image.png'
-
 LOVE_RGB = (255, 141, 141)
 NO_LOVE_RGB = (0, 150, 218)
 
@@ -27,16 +24,18 @@ class LoveCommand(commands.Cog):
 
     CLAUDINE_CHARACTER_ID = 104
     I_LOVE_YOU_TEXT = "Je t'aime {0}"
-    I_LOVE_YOU_URL = "https://cdn.karth.top/api/assets/dlc/res/equip/cg/4000160/image.png"
-    I_LOVE_YOU_URL_THUMBNAIL = "https://cdn.karth.top/api/assets/ww/res_en/res/item_root/medium/32_10413.png"
-    NO_LOVE_URL_THUMBNAIL = "https://cdn.karth.top/api/assets/ww/res_en/res/item_root/medium/32_10412.png"
 
     def __init__(self, dress_repository: DressRepository, equip_repository: EquipRepository,
-                 server_repository: ServerRepository, my_bot=commands.Bot):
+                 server_repository: ServerRepository, cdn_url: str, my_bot=commands.Bot):
         self.bot = my_bot
         self.dress_repository = dress_repository
         self.equip_repository = equip_repository
         self.server_repository = server_repository
+        self.i_love_you_url = '{0}/dlc/res/equip/cg/4000160/image.png'.format(cdn_url)
+        self.i_love_you_url_thumbnail = '{0}/res_en/res/item_root/medium/32_10413.png'.format(cdn_url)
+        self.no_love_url_thumbnail = '{0}/res_en/res/item_root/medium/32_10412.png'.format(cdn_url)
+        self.dress_url = '{0}/{1}'.format(cdn_url, 'dlc/res/dress/cg/{0}/image.png')
+        self.equip_url = '{0}/{1}'.format(cdn_url, 'dlc/res/equip/cg/{0}/image.png')
         self.claudine_dresses = []
         self.claudine_equips = []
 
@@ -56,7 +55,8 @@ class LoveCommand(commands.Cog):
         if len(self.claudine_equips) == 0:
             self.claudine_equips = self.equip_repository.get_equips_by_character_id(self.CLAUDINE_CHARACTER_ID)
 
-        options = [self.I_LOVE_YOU_TEXT, get_random_dress(self.claudine_dresses), get_random_equip(self.claudine_equips)]
+        options = [self.I_LOVE_YOU_TEXT, get_random_dress(self.claudine_dresses, self.dress_url),
+                   get_random_equip(self.claudine_equips, self.equip_url)]
         random_option = random.choices(options, weights=(1, 50, 80), k=1)
 
         if random_option[0] == self.I_LOVE_YOU_TEXT:
@@ -64,15 +64,15 @@ class LoveCommand(commands.Cog):
             title = "Love"
             message = random_option[0].format(author)
             color = get_discord_color(LOVE_RGB)
-            image = self.I_LOVE_YOU_URL
-            thumbnail = self.I_LOVE_YOU_URL_THUMBNAIL
+            image = self.i_love_you_url
+            thumbnail = self.i_love_you_url_thumbnail
         else:
             author = ''
             title = "No Love"
             message = "Je suis désolé, but I don't. Here have a nice picture of me as consolation."
             color = get_discord_color(NO_LOVE_RGB)
             image = random_option[0]
-            thumbnail = self.NO_LOVE_URL_THUMBNAIL
+            thumbnail = self.no_love_url_thumbnail
 
         embed = discord.Embed(title=title, description=message, color=color)
         embed.set_image(url=image)
@@ -81,26 +81,28 @@ class LoveCommand(commands.Cog):
         await ctx.send(author, embed=embed)
 
 
-def get_random_dress(dresses: list) -> str:
+def get_random_dress(dresses: list, dress_url: str) -> str:
     """
     From a given list of dresses choose a random item to return the url image of that dress
 
     :param dresses: A list with all the different available dresses
+    :param dress_url: Base url for the dress image
     :return: An str Url of that dress
     """
     random_dress = random.choice(dresses)
-    return DRESS_URL.format(random_dress.dress_id)
+    return dress_url.format(random_dress.dress_id)
 
 
-def get_random_equip(equips: list) -> str:
+def get_random_equip(equips: list, equip_url: str) -> str:
     """
     From a given list of equips choose a random item to return the url image of that equip
 
     :param equips: A list with all the different available equips
+    :param equip_url: Base url for the equip image
     :return: An str Url of that equip
     """
     random_equip = random.choice(equips)
-    return EQUIP_URL.format(random_equip.equip_id)
+    return equip_url.format(random_equip.equip_id)
 
 
 def setup(my_bot: commands.Bot) -> None:
@@ -113,4 +115,5 @@ def setup(my_bot: commands.Bot) -> None:
     my_bot.add_cog(LoveCommand(initializer.get_dress_repository(),
                                initializer.get_equip_repository(),
                                initializer.get_servers_repository(),
+                               initializer.get_cdn_url(),
                                my_bot))

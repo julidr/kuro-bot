@@ -3,20 +3,18 @@ from datetime import datetime
 from karthuria.model.color import Color
 from karthuria.model.school import School
 
-PORTRAIT_URL = 'https://cdn.karth.top/api/assets/jp/res/ui/images/archive/archive_chara/select/chara_portrait_{0}.png'
-
 
 class Character:
     """
     Model class of a Character with the basic information that can be retrieved from the Karthuria API
     """
 
-    def __init__(self, chara_id, name, birth_day, birth_month, school_id, detailed_info=None):
+    def __init__(self, chara_id, name, birth_day, birth_month, school_id, portrait_url='', detailed_info=None):
         self.id = chara_id
         self.name = name
         self.birthday = datetime(1, birth_month, birth_day).strftime('%d/%m')
         self.school = School(school_id)
-        self.portrait = PORTRAIT_URL.format(self.id)
+        self.portrait = '{0}/res/ui/images/archive/archive_chara/select/chara_portrait_{1}.png'.format(portrait_url, self.id)
         self.color = Color(name)
         if detailed_info:
             self.description = detailed_info['introduction']['en']

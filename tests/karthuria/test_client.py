@@ -8,7 +8,7 @@ from karthuria.client import KarthuriaClient
 from karthuria.model.color import Color
 from karthuria.model.school import School
 
-client = KarthuriaClient('test_url')
+client = KarthuriaClient('test_url', 'test_cdn_url')
 
 
 class TestGetCharacters:

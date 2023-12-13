@@ -11,13 +11,15 @@ class KarthuriaClient:
     More information can be found in their web site: https://karth.top/home
     """
 
-    def __init__(self, endpoint: str):
+    def __init__(self, endpoint: str, cdn_url: str):
         """
         Initialize the KarthuriaClient
 
         :param endpoint: Base url to retrieve information from the Karthuria API
+        :param cdn_url: Base url to retrieve assets from the Karthuria CDN
         """
         self.endpoint = endpoint
+        self.cdn_url = cdn_url
 
     def get_characters(self) -> list:
         """
@@ -35,7 +37,7 @@ class KarthuriaClient:
             for character in characters_json:
                 basic_info = characters_json[character]['basicInfo']
                 if basic_info['birth_day'] != 0 and basic_info['school_id'] in schools:
-                    list_of_characters.append(convert_to_character(basic_info))
+                    list_of_characters.append(convert_to_character(basic_info, self.cdn_url))
 
         return list_of_characters if response.ok else response.raise_for_status()
 
@@ -54,7 +56,7 @@ class KarthuriaClient:
             basic_info = character_json['basicInfo']
             info = character_json['info']
 
-        return convert_to_character(basic_info, info) if response.ok else response.raise_for_status()
+        return convert_to_character(basic_info, self.cdn_url, info) if response.ok else response.raise_for_status()
 
     def get_dress(self, dress_id: int) -> Dress:
         """
@@ -157,26 +159,28 @@ class KarthuriaClient:
             events_json = response.json()
             if 'event' in events_json:
                 event_info = events_json['event']
-                events = [convert_to_event(event_info[event]) for event in event_info if event_info[event]['info'] != 0]
+                events = [convert_to_event(event_info[event], self.cdn_url) for event in event_info if
+                          event_info[event]['info'] != 0]
                 current_events['events'] = events
             if 'rogue' in events_json:
                 rogue_info = events_json['rogue']
-                challenges = [convert_to_challenge(rogue_info[challenge]) for challenge in rogue_info]
+                challenges = [convert_to_challenge(rogue_info[challenge], self.cdn_url) for challenge in rogue_info]
                 current_events['challenges'] = challenges
             if 'titan' in events_json:
                 titan_info = events_json['titan']
                 boss_end_at = titan_info['endAt']
-                bosses = [convert_to_boss(titan_info['enemy'][boss], boss_end_at) for boss in titan_info['enemy']]
+                bosses = [convert_to_boss(titan_info['enemy'][boss], boss_end_at, self.cdn_url) for boss in titan_info['enemy']]
                 current_events['bosses'] = bosses
 
         return current_events if response.ok else response.raise_for_status()
 
 
-def convert_to_character(basic_info: dict, detailed_info: dict = None) -> Character:
+def convert_to_character(basic_info: dict, portrait_url: str = '', detailed_info: dict = None) -> Character:
     """
     Transform a dictionary with the 'basicInfo' and 'info' information returned by Karthuria API
     into a Character object
 
+    :param portrait_url: The url of the portrait
     :param basic_info: Information retrieved from the 'basicInfo' response
     :param detailed_info: Information retrieved from the 'info' response of detailed character information
     :return: A new instance of the Character model with the given information
@@ -187,6 +191,7 @@ def convert_to_character(basic_info: dict, detailed_info: dict = None) -> Charac
                           basic_info['birth_day'],
                           basic_info['birth_month'],
                           basic_info['school_id'],
+                          portrait_url=portrait_url,
                           detailed_info=detailed_info)
     return character
 
@@ -240,44 +245,50 @@ def convert_to_enemy(basic_info: dict) -> Enemy:
     return enemy
 
 
-def convert_to_event(event_info: dict) -> Event:
+def convert_to_event(event_info: dict, event_url: str = '') -> Event:
     """
     Transform a dictionary with the 'event' information returned by Karthuria API into a Event object
 
     :param event_info: Information retrieved from the 'event' response
+    :param event_url: Url of the event banner
     :return: A new instance of the Event model with the given information
     """
     event = Event(event_info['id'],
                   end_date=event_info['endAt'][0],
-                  start_date=event_info['beginAt'][0])
+                  start_date=event_info['beginAt'][0],
+                  event_url=event_url)
 
     return event
 
 
-def convert_to_challenge(challenge_info: dict) -> Challenge:
+def convert_to_challenge(challenge_info: dict, challenge_url: str = '') -> Challenge:
     """
     Transform a dictionary with the 'rogue' information returned by Karthuria API into a Challenge object
 
     :param challenge_info: Information retrieved from the 'rogue' response
+    :param challenge_url: Url of the challenge banner
     :return: A new instance of the Challenge model with the given information
     """
     challenge = Challenge(challenge_info['id'],
                           challenge_info['endAt'],
-                          start_date=challenge_info['beginAt'])
+                          start_date=challenge_info['beginAt'],
+                          challenge_url=challenge_url)
 
     return challenge
 
 
-def convert_to_boss(boss_info: dict, end_at: int) -> Boss:
+def convert_to_boss(boss_info: dict, end_at: int, boss_url: str = '') -> Boss:
     """
     Transform a dictionary with the 'titan' and 'enemy' information returned by Karthuria API into a Boss object
 
     :param boss_info: Information retrieved from the 'titan' and 'enemy' response
     :param end_at: End date of the boss battle
+    :param boss_url: Url of the enemy icon
     :return: A new instance of the Boss model with the given information
     """
     boss = Boss(boss_info['id'],
                 end_at,
-                hp_percentage=boss_info['hpLeftPercent'])
+                hp_percentage=boss_info['hpLeftPercent'],
+                boss_url=boss_url)
 
     return boss
