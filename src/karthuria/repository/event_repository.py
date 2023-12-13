@@ -18,7 +18,7 @@ class EventRepository:
 
     def get_event_name_by_id(self, event_id: str) -> str:
         """
-        Search for the name of a event based on the given id.
+        Search for the name of an event based on the given id.
 
         :param event_id: Id of the event to search
         :return: The name of the event

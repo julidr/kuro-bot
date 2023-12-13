@@ -159,16 +159,17 @@ class KarthuriaClient:
             events_json = response.json()
             if 'event' in events_json:
                 event_info = events_json['event']
-                events = [convert_to_event(event_info[event]) for event in event_info if event_info[event]['info'] != 0]
+                events = [convert_to_event(event_info[event], self.cdn_url) for event in event_info if
+                          event_info[event]['info'] != 0]
                 current_events['events'] = events
             if 'rogue' in events_json:
                 rogue_info = events_json['rogue']
-                challenges = [convert_to_challenge(rogue_info[challenge]) for challenge in rogue_info]
+                challenges = [convert_to_challenge(rogue_info[challenge], self.cdn_url) for challenge in rogue_info]
                 current_events['challenges'] = challenges
             if 'titan' in events_json:
                 titan_info = events_json['titan']
                 boss_end_at = titan_info['endAt']
-                bosses = [convert_to_boss(titan_info['enemy'][boss], boss_end_at) for boss in titan_info['enemy']]
+                bosses = [convert_to_boss(titan_info['enemy'][boss], boss_end_at, self.cdn_url) for boss in titan_info['enemy']]
                 current_events['bosses'] = bosses
 
         return current_events if response.ok else response.raise_for_status()
@@ -244,44 +245,50 @@ def convert_to_enemy(basic_info: dict) -> Enemy:
     return enemy
 
 
-def convert_to_event(event_info: dict) -> Event:
+def convert_to_event(event_info: dict, event_url: str = '') -> Event:
     """
     Transform a dictionary with the 'event' information returned by Karthuria API into a Event object
 
     :param event_info: Information retrieved from the 'event' response
+    :param event_url: Url of the event banner
     :return: A new instance of the Event model with the given information
     """
     event = Event(event_info['id'],
                   end_date=event_info['endAt'][0],
-                  start_date=event_info['beginAt'][0])
+                  start_date=event_info['beginAt'][0],
+                  event_url=event_url)
 
     return event
 
 
-def convert_to_challenge(challenge_info: dict) -> Challenge:
+def convert_to_challenge(challenge_info: dict, challenge_url: str = '') -> Challenge:
     """
     Transform a dictionary with the 'rogue' information returned by Karthuria API into a Challenge object
 
     :param challenge_info: Information retrieved from the 'rogue' response
+    :param challenge_url: Url of the challenge banner
     :return: A new instance of the Challenge model with the given information
     """
     challenge = Challenge(challenge_info['id'],
                           challenge_info['endAt'],
-                          start_date=challenge_info['beginAt'])
+                          start_date=challenge_info['beginAt'],
+                          challenge_url=challenge_url)
 
     return challenge
 
 
-def convert_to_boss(boss_info: dict, end_at: int) -> Boss:
+def convert_to_boss(boss_info: dict, end_at: int, boss_url: str = '') -> Boss:
     """
     Transform a dictionary with the 'titan' and 'enemy' information returned by Karthuria API into a Boss object
 
     :param boss_info: Information retrieved from the 'titan' and 'enemy' response
     :param end_at: End date of the boss battle
+    :param boss_url: Url of the enemy icon
     :return: A new instance of the Boss model with the given information
     """
     boss = Boss(boss_info['id'],
                 end_at,
-                hp_percentage=boss_info['hpLeftPercent'])
+                hp_percentage=boss_info['hpLeftPercent'],
+                boss_url=boss_url)
 
     return boss
