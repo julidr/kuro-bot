@@ -11,13 +11,15 @@ class KarthuriaClient:
     More information can be found in their web site: https://karth.top/home
     """
 
-    def __init__(self, endpoint: str):
+    def __init__(self, endpoint: str, cdn_url: str):
         """
         Initialize the KarthuriaClient
 
         :param endpoint: Base url to retrieve information from the Karthuria API
+        :param cdn_url: Base url to retrieve assets from the Karthuria CDN
         """
         self.endpoint = endpoint
+        self.cdn_url = cdn_url
 
     def get_characters(self) -> list:
         """
@@ -35,7 +37,7 @@ class KarthuriaClient:
             for character in characters_json:
                 basic_info = characters_json[character]['basicInfo']
                 if basic_info['birth_day'] != 0 and basic_info['school_id'] in schools:
-                    list_of_characters.append(convert_to_character(basic_info))
+                    list_of_characters.append(convert_to_character(basic_info, self.cdn_url))
 
         return list_of_characters if response.ok else response.raise_for_status()
 
@@ -54,7 +56,7 @@ class KarthuriaClient:
             basic_info = character_json['basicInfo']
             info = character_json['info']
 
-        return convert_to_character(basic_info, info) if response.ok else response.raise_for_status()
+        return convert_to_character(basic_info, self.cdn_url, info) if response.ok else response.raise_for_status()
 
     def get_dress(self, dress_id: int) -> Dress:
         """
@@ -172,11 +174,12 @@ class KarthuriaClient:
         return current_events if response.ok else response.raise_for_status()
 
 
-def convert_to_character(basic_info: dict, detailed_info: dict = None) -> Character:
+def convert_to_character(basic_info: dict, portrait_url: str = '', detailed_info: dict = None) -> Character:
     """
     Transform a dictionary with the 'basicInfo' and 'info' information returned by Karthuria API
     into a Character object
 
+    :param portrait_url: The url of the portrait
     :param basic_info: Information retrieved from the 'basicInfo' response
     :param detailed_info: Information retrieved from the 'info' response of detailed character information
     :return: A new instance of the Character model with the given information
@@ -187,6 +190,7 @@ def convert_to_character(basic_info: dict, detailed_info: dict = None) -> Charac
                           basic_info['birth_day'],
                           basic_info['birth_month'],
                           basic_info['school_id'],
+                          portrait_url=portrait_url,
                           detailed_info=detailed_info)
     return character
 

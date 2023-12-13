@@ -8,5 +8,6 @@
     "command.love.love"
   ],
   "karthuria_api_url": "https://karth.top/api",
+  "karthuria_cdn_url": "https://cdn.karth.top/assets",
   "servers_path": "servers.json"
 }
